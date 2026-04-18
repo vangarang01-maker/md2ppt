@@ -1,0 +1,7 @@
+fastapi>=0.115.0
+uvicorn>=0.30.6
+python-pptx>=1.0.2
+anthropic>=0.34.0
+google-genai>=1.0.0
+cryptography>=43.0.1
+pydantic>=2.9.0

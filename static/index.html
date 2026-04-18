@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD → PPT 생성기</title>
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --surface: #1a1a2e;
+    --surface2: #16213e;
+    --accent: #4d9dff;
+    --accent2: #7b61ff;
+    --text: #e8eaf6;
+    --subtext: #8892b0;
+    --border: #2a2a4a;
+    --success: #4caf98;
+    --error: #ff6b6b;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 540px;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  }
+
+  .header {
+    padding: 28px 32px 0;
+  }
+
+  .header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 4px;
+  }
+
+  .header p { font-size: 0.82rem; color: var(--subtext); }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    padding: 20px 32px 0;
+  }
+
+  .tab {
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--subtext);
+    transition: all 0.2s;
+  }
+
+  .tab.active {
+    background: var(--surface2);
+    color: var(--accent);
+    border: 1px solid var(--border);
+  }
+
+  .tab:hover:not(.active) { color: var(--text); }
+
+  .panel { display: none; padding: 24px 32px 32px; }
+  .panel.active { display: block; }
+
+  .field { margin-bottom: 16px; }
+
+  label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--subtext);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, select:focus { border-color: var(--accent); }
+
+  select option { background: var(--surface2); }
+
+  .row { display: flex; gap: 12px; }
+  .row .field { flex: 1; }
+
+  .btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: var(--radius);
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+  }
+
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    margin-top: 12px;
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Circle progress */
+  .loader-wrap {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 0 8px;
+  }
+
+  .loader-wrap.visible { display: flex; }
+
+  .circle-progress {
+    position: relative;
+    width: 100px;
+    height: 100px;
+  }
+
+  .circle-progress svg {
+    transform: rotate(-90deg);
+    width: 100px;
+    height: 100px;
+  }
+
+  .circle-bg {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 7;
+  }
+
+  .circle-fill {
+    fill: none;
+    stroke: url(#grad);
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-dasharray: 251.2;
+    stroke-dashoffset: 251.2;
+    transition: stroke-dashoffset 0.5s ease;
+  }
+
+  .circle-pct {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .loader-msg {
+    font-size: 0.85rem;
+    color: var(--subtext);
+    text-align: center;
+  }
+
+  /* Result */
+  .result {
+    display: none;
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .result.success {
+    display: block;
+    background: rgba(76, 175, 152, 0.12);
+    border: 1px solid rgba(76, 175, 152, 0.3);
+    color: var(--success);
+  }
+
+  .result.error {
+    display: block;
+    background: rgba(255, 107, 107, 0.12);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    color: var(--error);
+  }
+
+  /* Key status dots */
+  .key-status {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+
+  .key-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--subtext);
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  .dot.set { background: var(--success); box-shadow: 0 0 6px var(--success); }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <h1>MD → PPT 생성기</h1>
+    <p>마크다운 파일을 프레젠테이션으로 자동 변환</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('generate')">생성</button>
+    <button class="tab" onclick="switchTab('settings')">설정 ⚙</button>
+  </div>
+
+  <!-- 생성 탭 -->
+  <div id="tab-generate" class="panel active">
+    <div class="field">
+      <label>폴더 경로</label>
+      <input id="folder" type="text" placeholder="예: /Users/me/Documents/notes" />
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>모델</label>
+        <select id="model">
+          <option value="gemini">Gemini</option>
+          <option value="claude">Claude</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>디자인 힌트 (선택)</label>
+      <input id="design" type="text" placeholder="예: 미니멀, 네이비+화이트, 모던" />
+    </div>
+
+    <div class="field">
+      <label>저장 경로 (선택)</label>
+      <input id="output" type="text" placeholder="기본값: ./output" />
+    </div>
+
+    <button class="btn btn-primary" id="btn-generate" onclick="startGenerate()">PPT 생성하기 →</button>
+
+    <div class="loader-wrap" id="loader">
+      <div class="circle-progress">
+        <svg viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#4d9dff" />
+              <stop offset="100%" style="stop-color:#7b61ff" />
+            </linearGradient>
+          </defs>
+          <circle class="circle-bg" cx="50" cy="50" r="40"/>
+          <circle class="circle-fill" id="circle-fill" cx="50" cy="50" r="40"/>
+        </svg>
+        <div class="circle-pct" id="circle-pct">0%</div>
+      </div>
+      <div class="loader-msg" id="loader-msg">준비 중...</div>
+    </div>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <!-- 설정 탭 -->
+  <div id="tab-settings" class="panel">
+    <div class="key-status" id="key-status">
+      <div class="key-badge">
+        <div class="dot" id="dot-gemini"></div>
+        <span>Gemini</span>
+      </div>
+      <div class="key-badge">
+        <div class="dot" id="dot-claude"></div>
+        <span>Claude</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Gemini API Key</label>
+      <input id="gemini-key" type="password" placeholder="AIza..." />
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field">
+      <label>Claude API Key</label>
+      <input id="claude-key" type="password" placeholder="sk-ant-..." />
+    </div>
+
+    <button class="btn btn-primary" onclick="saveSettings()">저장</button>
+    <div class="result" id="settings-result"></div>
+  </div>
+</div>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      t.classList.toggle('active', ['generate','settings'][i] === name);
+    });
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`tab-${name}`).classList.add('active');
+    if (name === 'settings') loadKeyStatus();
+  }
+
+  function setProgress(pct, msg) {
+    const circumference = 251.2;
+    const offset = circumference - (pct / 100) * circumference;
+    document.getElementById('circle-fill').style.strokeDashoffset = offset;
+    document.getElementById('circle-pct').textContent = `${pct}%`;
+    document.getElementById('loader-msg').textContent = msg;
+  }
+
+  async function startGenerate() {
+    const folder = document.getElementById('folder').value.trim();
+    const model  = document.getElementById('model').value;
+    const design = document.getElementById('design').value.trim();
+    const output = document.getElementById('output').value.trim();
+
+    if (!folder) { alert('폴더 경로를 입력해주세요.'); return; }
+
+    const btn = document.getElementById('btn-generate');
+    const loader = document.getElementById('loader');
+    const result = document.getElementById('result');
+
+    btn.disabled = true;
+    loader.classList.add('visible');
+    result.className = 'result';
+    result.textContent = '';
+    setProgress(0, '시작 중...');
+
+    const params = new URLSearchParams({ folder, model, design, output: output || './output' });
+
+    try {
+      const es = new EventSource(`/api/generate?${params}`);
+
+      es.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+
+        if (data.error) {
+          es.close();
+          loader.classList.remove('visible');
+          btn.disabled = false;
+          result.className = 'result error';
+          result.textContent = `오류: ${data.error}`;
+          return;
+        }
+
+        setProgress(data.progress, data.message);
+
+        if (data.progress === 100) {
+          es.close();
+          btn.disabled = false;
+          setTimeout(() => {
+            loader.classList.remove('visible');
+            result.className = 'result success';
+            result.textContent = `✅ 저장 완료\n${data.file}`;
+          }, 600);
+        }
+      };
+
+      es.onerror = () => {
+        es.close();
+        loader.classList.remove('visible');
+        btn.disabled = false;
+        result.className = 'result error';
+        result.textContent = '서버 연결 오류가 발생했습니다.';
+      };
+    } catch (err) {
+      loader.classList.remove('visible');
+      btn.disabled = false;
+    }
+  }
+
+  async function saveSettings() {
+    const body = {
+      claude_key: document.getElementById('claude-key').value.trim(),
+      gemini_key: document.getElementById('gemini-key').value.trim(),
+    };
+    const res = await fetch('/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const r = document.getElementById('settings-result');
+    if (res.ok) {
+      r.className = 'result success';
+      r.textContent = '✅ API 키가 저장됐습니다.';
+      loadKeyStatus();
+      document.getElementById('claude-key').value = '';
+      document.getElementById('gemini-key').value = '';
+    } else {
+      r.className = 'result error';
+      r.textContent = '저장 실패';
+    }
+  }
+
+  async function loadKeyStatus() {
+    const res = await fetch('/api/settings');
+    const data = await res.json();
+    document.getElementById('dot-claude').className = 'dot' + (data.claude ? ' set' : '');
+    document.getElementById('dot-gemini').className = 'dot' + (data.gemini ? ' set' : '');
+  }
+
+  loadKeyStatus();
+</script>
+</body>
+</html>
