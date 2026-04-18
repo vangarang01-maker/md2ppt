@@ -270,8 +270,8 @@
   </div>
 
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('generate')">생성</button>
-    <button class="tab" onclick="switchTab('settings')">설정 ⚙</button>
+    <button class="tab active" data-tab="generate" onclick="switchTab('generate')">생성</button>
+    <button class="tab" data-tab="settings" onclick="switchTab('settings')">설정 ⚙</button>
   </div>
 
   <!-- 생성 탭 -->
@@ -292,8 +292,18 @@
     </div>
 
     <div class="field">
-      <label>디자인 힌트 (선택)</label>
-      <input id="design" type="text" placeholder="예: 미니멀, 네이비+화이트, 모던" />
+      <label>발표 목적 (선택)</label>
+      <input id="goal" type="text" placeholder="예: 신규 팀원에게 시스템 구조를 설명하는 발표" />
+    </div>
+
+    <div class="field">
+      <label>청중 (선택)</label>
+      <input id="audience" type="text" placeholder="예: 개발팀 / 기획팀 / C레벨 경영진" />
+    </div>
+
+    <div class="field">
+      <label>테마 설명 (선택)</label>
+      <input id="theme" type="text" placeholder="예: 깔끔한 화이트, 포인트는 딥블루 / 따뜻한 베이지, 골드 강조" />
     </div>
 
     <div class="field">
@@ -355,8 +365,8 @@
 
 <script>
   function switchTab(name) {
-    document.querySelectorAll('.tab').forEach((t, i) => {
-      t.classList.toggle('active', ['generate','settings'][i] === name);
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === name);
     });
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.getElementById(`tab-${name}`).classList.add('active');
@@ -372,10 +382,12 @@
   }
 
   async function startGenerate() {
-    const folder = document.getElementById('folder').value.trim();
-    const model  = document.getElementById('model').value;
-    const design = document.getElementById('design').value.trim();
-    const output = document.getElementById('output').value.trim();
+    const folder   = document.getElementById('folder').value.trim();
+    const model    = document.getElementById('model').value;
+    const goal     = document.getElementById('goal').value.trim();
+    const audience = document.getElementById('audience').value.trim();
+    const theme    = document.getElementById('theme').value.trim();
+    const output   = document.getElementById('output').value.trim();
 
     if (!folder) { alert('폴더 경로를 입력해주세요.'); return; }
 
@@ -389,7 +401,7 @@
     result.textContent = '';
     setProgress(0, '시작 중...');
 
-    const params = new URLSearchParams({ folder, model, design, output: output || './output' });
+    const params = new URLSearchParams({ folder, model, goal, audience, theme, output: output || './output' });
 
     try {
       const es = new EventSource(`/api/generate?${params}`);
@@ -429,6 +441,8 @@
     } catch (err) {
       loader.classList.remove('visible');
       btn.disabled = false;
+      result.className = 'result error';
+      result.textContent = `오류: ${err.message}`;
     }
   }
 

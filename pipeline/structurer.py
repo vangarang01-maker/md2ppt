@@ -1,30 +1,71 @@
 import json
 import re
 
-SYSTEM_PROMPT = """You are a presentation designer. Analyze the given markdown content and return a structured slide plan as valid JSON only — no explanation, no markdown fences.
+SYSTEM_PROMPT = """You are an expert presentation consultant. Your job is to transform raw markdown content into a compelling, narrative-driven slide deck. You do NOT copy-paste — you rewrite everything in crisp presentation voice.
+
+Output ONLY valid JSON with no explanation and no markdown fences.
 
 JSON schema:
 {
+  "theme": {
+    "bg": "#hex",
+    "surface": "#hex",
+    "accent": "#hex",
+    "text": "#hex",
+    "subtext": "#hex",
+    "body": "#hex"
+  },
   "title": "string",
   "slides": [
-    { "type": "title",   "title": "string", "subtitle": "string" },
-    { "type": "content", "title": "string", "bullets": ["string"] },
-    { "type": "chart",   "title": "string", "chart_type": "bar|column|line|pie",
-      "categories": ["string"], "series": [{"name": "string", "values": [number]}] }
+    { "type": "title",      "title": "string", "subtitle": "string" },
+    { "type": "agenda",     "title": "string", "items": ["string"] },
+    { "type": "section",    "title": "string", "subtitle": "string" },
+    { "type": "content",    "title": "string", "bullets": ["string"] },
+    { "type": "stat",       "title": "string", "stats": [{"label": "string", "value": "string"}] },
+    { "type": "two_column", "title": "string", "left": {"heading": "string", "bullets": ["string"]}, "right": {"heading": "string", "bullets": ["string"]} },
+    { "type": "quote",      "title": "string", "quote": "string", "attribution": "string" },
+    { "type": "chart",      "title": "string", "chart_type": "bar|column|line|pie",
+      "categories": ["string"], "series": [{"name": "string", "values": [0]}] },
+    { "type": "summary",    "title": "string", "bullets": ["string"] }
   ]
 }
 
-Rules:
-- Maximum 10 slides total
-- First slide must be type "title"
-- Use "chart" type when markdown contains tables or numeric comparison data
-- Keep bullets concise (max 6 per slide)
-- Respond in the same language as the input content
+STRICT RULES:
+1. NARRATIVE ARC — slides must follow this order:
+   title → agenda → (section + 1~2 content/stat/two_column/quote) × 2~3 groups → summary
+2. MAXIMUM 8 slides total. Quality over quantity.
+3. REWRITE all content in punchy presentation language. Never copy-paste sentences from source.
+4. Each bullet: max 15 words. Start with a relevant emoji (e.g. ⚡ 🔍 ✅ ⚠️ 📊 🎯 🔧 💡 🚀).
+5. Max 3 bullets per content/summary slide.
+6. Use "stat" type for numeric data, KPIs, or metrics (up to 3 stats per slide).
+7. Use "two_column" for comparisons, before/after, or pros/cons.
+8. Use "quote" for the single most important insight or guiding principle.
+9. agenda "items" should list section titles only (max 5 items).
+10. THEME: Generate a hex color palette that matches the theme description provided.
+    If no theme description is given, use this dark navy default:
+    bg=#1A1A2E, surface=#16213E, accent=#4D9DFF, text=#FFFFFF, subtext=#AABBCC, body=#DDEEFF
+11. Respond in the same language as the input content.
 """
 
 
-async def structure_slides(content: str, model: str, api_key: str, design: str) -> dict:
-    prompt = f"[디자인 힌트: {design}]\n\n{content}" if design else content
+async def structure_slides(
+    content: str,
+    model: str,
+    api_key: str,
+    theme_desc: str,
+    goal: str,
+    audience: str,
+) -> dict:
+    context_lines = []
+    if goal:
+        context_lines.append(f"[발표 목적: {goal}]")
+    if audience:
+        context_lines.append(f"[청중: {audience}]")
+    if theme_desc:
+        context_lines.append(f"[테마 설명: {theme_desc}]")
+
+    header = "\n".join(context_lines)
+    prompt = f"{header}\n\n{content}" if header else content
 
     if model == "claude":
         return await _call_claude(prompt, api_key)
