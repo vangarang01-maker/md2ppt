@@ -89,16 +89,32 @@ async def _call_claude(prompt: str, api_key: str) -> dict:
     return _parse_json(msg.content[0].text)
 
 
+_GEMINI_PRIMARY = "gemini-3.1-flash-lite-preview"
+_GEMINI_FALLBACK = "gemini-2.5-flash-lite"
+
+
+def _is_overload(e: Exception) -> bool:
+    msg = str(e).lower()
+    return "503" in str(e) or "unavailable" in msg or "high demand" in msg or "overloaded" in msg
+
+
 async def _call_gemini(prompt: str, api_key: str) -> dict:
     from google import genai
     from google.genai.types import GenerateContentConfig
     client = genai.Client(api_key=api_key)
-    response = await client.aio.models.generate_content(
-        model="gemini-3.1-flash-lite-preview",
-        contents=prompt,
-        config=GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
-    )
-    return _parse_json(response.text)
+
+    for model in [_GEMINI_PRIMARY, _GEMINI_FALLBACK]:
+        try:
+            response = await client.aio.models.generate_content(
+                model=model,
+                contents=prompt,
+                config=GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
+            )
+            return _parse_json(response.text)
+        except Exception as e:
+            if _is_overload(e) and model == _GEMINI_PRIMARY:
+                continue
+            raise
 
 
 def _parse_json(text: str) -> dict:
