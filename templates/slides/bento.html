@@ -1,0 +1,54 @@
+{% extends "_base.html" %}
+{% block content %}
+<!-- 배경 장식 -->
+<div style="position:absolute;right:-60px;bottom:-60px;width:300px;height:300px;border-radius:50%;background:{{ theme.accent }}08;pointer-events:none;"></div>
+
+<!-- 제목 영역 -->
+<div style="position:absolute;top:0;left:0;right:0;padding:38px 72px 0;">
+  <h2 style="font-size:32px;font-weight:800;color:{{ theme.text }};letter-spacing:-0.5px;">{{ slide.title }}</h2>
+  <div style="margin-top:10px;width:44px;height:4px;background:{{ theme.accent }};border-radius:2px;"></div>
+</div>
+
+<!-- Bento 그리드 -->
+{% set cards = slide.cards %}
+{% set count = cards | length %}
+<div style="position:absolute;top:118px;left:72px;right:72px;bottom:48px;display:grid;gap:16px;
+  {% if count >= 3 %}
+  grid-template-columns: 2fr 1fr;grid-template-rows: 1fr 1fr;
+  {% elif count == 2 %}
+  grid-template-columns: 1fr 1fr;grid-template-rows: 1fr;
+  {% else %}
+  grid-template-columns: 1fr;grid-template-rows: 1fr;
+  {% endif %}
+">
+  {% for card in cards %}
+  <div style="
+    background:{{ theme.surface }};
+    border-radius:16px;
+    border:1px solid {{ theme.accent }}22;
+    padding:28px 32px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    position:relative;overflow:hidden;
+    {% if loop.first and count >= 3 %}grid-row: 1 / span 2;{% endif %}
+  ">
+    <!-- 상단 액센트 스트라이프 -->
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:{{ theme.accent }};{% if not loop.first %}opacity:0.4;{% endif %}"></div>
+    <!-- 배경 원 장식 -->
+    <div style="position:absolute;bottom:-24px;right:-24px;width:100px;height:100px;border-radius:50%;background:{{ theme.accent }}08;pointer-events:none;"></div>
+
+    <div>
+      <!-- 아이콘 -->
+      {% if card.icon and icons.get(card.icon) %}
+      <div style="color:{{ theme.accent }};width:{% if loop.first and count >= 3 %}32px{% else %}24px{% endif %};height:{% if loop.first and count >= 3 %}32px{% else %}24px{% endif %};margin-bottom:12px;opacity:0.9;">{{ icons.get(card.icon) | safe }}</div>
+      {% endif %}
+      <!-- 제목 -->
+      <div style="font-size:{% if loop.first and count >= 3 %}22px{% else %}17px{% endif %};font-weight:700;color:{{ theme.text }};line-height:1.35;margin-bottom:10px;">{{ card.title }}</div>
+      <!-- 본문 -->
+      {% if card.body %}
+      <p style="font-size:{% if loop.first and count >= 3 %}17px{% else %}14px{% endif %};font-weight:400;color:{{ theme.body }};line-height:1.55;">{{ card.body }}</p>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

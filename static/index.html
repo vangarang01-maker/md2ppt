@@ -255,6 +255,13 @@
 
   .dot.set { background: var(--success); box-shadow: 0 0 6px var(--success); }
 
+  .hint {
+    font-size: 0.73rem;
+    color: var(--subtext);
+    margin-top: 5px;
+    opacity: 0.75;
+  }
+
   .divider {
     height: 1px;
     background: var(--border);
@@ -344,6 +351,10 @@
         <div class="dot" id="dot-claude"></div>
         <span>Claude</span>
       </div>
+      <div class="key-badge">
+        <div class="dot" id="dot-unsplash"></div>
+        <span>Unsplash</span>
+      </div>
     </div>
 
     <div class="field">
@@ -356,6 +367,14 @@
     <div class="field">
       <label>Claude API Key</label>
       <input id="claude-key" type="password" placeholder="sk-ant-..." />
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field">
+      <label>Unsplash Access Key <span style="color:var(--accent);font-size:0.7rem;letter-spacing:0;text-transform:none;">(선택 — 슬라이드 배경 이미지)</span></label>
+      <input id="unsplash-key" type="password" placeholder="...Unsplash Access Key..." />
+      <p class="hint">없으면 단색 배경으로 동작합니다. unsplash.com/developers에서 무료 발급 가능.</p>
     </div>
 
     <button class="btn btn-primary" onclick="saveSettings()">저장</button>
@@ -450,6 +469,7 @@
     const body = {
       claude_key: document.getElementById('claude-key').value.trim(),
       gemini_key: document.getElementById('gemini-key').value.trim(),
+      unsplash_key: document.getElementById('unsplash-key').value.trim(),
     };
     const res = await fetch('/api/settings', {
       method: 'POST',
@@ -463,6 +483,7 @@
       loadKeyStatus();
       document.getElementById('claude-key').value = '';
       document.getElementById('gemini-key').value = '';
+      document.getElementById('unsplash-key').value = '';
     } else {
       r.className = 'result error';
       r.textContent = '저장 실패';
@@ -474,6 +495,7 @@
     const data = await res.json();
     document.getElementById('dot-claude').className = 'dot' + (data.claude ? ' set' : '');
     document.getElementById('dot-gemini').className = 'dot' + (data.gemini ? ' set' : '');
+    document.getElementById('dot-unsplash').className = 'dot' + (data.unsplash ? ' set' : '');
   }
 
   loadKeyStatus();

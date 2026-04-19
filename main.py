@@ -13,6 +13,7 @@ from pipeline.html_renderer import render_all_slides
 from pipeline.screenshot import screenshot_slides
 from pipeline.image_pptx import build_pptx_from_images
 from pipeline.icon_fetcher import fetch_icons
+from pipeline.image_fetcher import fetch_images
 from storage import KeyStore
 
 app = FastAPI(title="MD → PPT 파이프라인")
@@ -23,6 +24,7 @@ OUTPUT_DIR = str(Path(__file__).parent / "output")
 class SettingsIn(BaseModel):
     claude_key: str = ""
     gemini_key: str = ""
+    unsplash_key: str = ""
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -32,7 +34,7 @@ async def index():
 
 @app.get("/api/settings")
 async def get_settings():
-    return {"claude": store.has("claude"), "gemini": store.has("gemini")}
+    return {"claude": store.has("claude"), "gemini": store.has("gemini"), "unsplash": store.has("unsplash")}
 
 
 @app.post("/api/settings")
@@ -41,6 +43,8 @@ async def save_settings(body: SettingsIn):
         store.save("claude", body.claude_key)
     if body.gemini_key:
         store.save("gemini", body.gemini_key)
+    if body.unsplash_key:
+        store.save("unsplash", body.unsplash_key)
     return {"status": "ok"}
 
 
@@ -76,11 +80,15 @@ async def generate(
 
             slides_data = await structure_slides(md_content, model, api_key, theme, goal, audience)
 
-            yield event(55, "아이콘 리소스 로드 중...")
+            yield event(50, "아이콘 리소스 로드 중...")
             icons = await fetch_icons(slides_data)
 
-            yield event(62, "슬라이드 HTML 렌더링 중...")
-            html_slides = render_all_slides(slides_data, icons)
+            yield event(58, "배경 이미지 로드 중...")
+            unsplash_key = store.load("unsplash")
+            images = await fetch_images(slides_data, unsplash_key)
+
+            yield event(66, "슬라이드 HTML 렌더링 중...")
+            html_slides = render_all_slides(slides_data, icons, images)
 
             yield event(75, f"슬라이드 {len(html_slides)}장 스크린샷 캡처 중...")
             await asyncio.sleep(0.05)

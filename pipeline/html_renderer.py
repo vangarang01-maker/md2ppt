@@ -22,10 +22,15 @@ def _normalize_theme(raw: dict) -> dict:
     return merged
 
 
-def render_all_slides(slides_data: dict, icons: dict[str, str] | None = None) -> list[str]:
+def render_all_slides(
+    slides_data: dict,
+    icons: dict[str, str] | None = None,
+    images: dict[int, str] | None = None,
+) -> list[str]:
     theme = _normalize_theme(slides_data.get("theme", {}))
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
     icons = icons or {}
+    images = images or {}
 
     html_slides = []
     for i, slide in enumerate(slides_data.get("slides", [])):
@@ -34,6 +39,8 @@ def render_all_slides(slides_data: dict, icons: dict[str, str] | None = None) ->
             template = env.get_template(f"{slide_type}.html")
         except Exception:
             template = env.get_template("content.html")
-        html_slides.append(template.render(slide=slide, theme=theme, index=i, icons=icons))
+        html_slides.append(
+            template.render(slide=slide, theme=theme, index=i, icons=icons, image_url=images.get(i, ""))
+        )
 
     return html_slides

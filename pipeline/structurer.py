@@ -26,6 +26,7 @@ JSON schema:
     { "type": "quote",      "title": "string", "quote": "string", "attribution": "string" },
     { "type": "chart",      "title": "string", "chart_type": "bar|column|line|pie",
       "categories": ["string"], "series": [{"name": "string", "values": [0]}] },
+    { "type": "bento",      "title": "string", "cards": [{"title": "string", "body": "string", "icon": "mdi:icon-name"}] },
     { "type": "summary",    "title": "string", "bullets": ["string"] }
   ]
 }
@@ -37,19 +38,20 @@ STRICT RULES:
 3. REWRITE all content in punchy presentation language. Never copy-paste sentences from source.
 4. Each bullet: max 15 words. Start with a relevant emoji (e.g. ⚡ 🔍 ✅ ⚠️ 📊 🎯 🔧 💡 🚀).
 5. Max 3 bullets per content/summary slide.
-6. Use "stat" type ONLY when real numeric/percentage/ratio data exists. stat "value" MUST be a short number or measure (e.g. "47%", "3.2×", "12건", "1일", "99.9%"). NEVER put long text or sentences as a stat value. If no meaningful numeric data exists, use "content" or "two_column" instead.
-7. Use "two_column" for comparisons, before/after, or pros/cons.
-8. Use "quote" for the single most important insight or guiding principle.
-9. agenda "items" should list section titles only (max 5 items).
-10. THEME: Generate a hex color palette that matches the theme description provided.
+6. Use "bento" type for feature overviews, product highlights, or multi-point comparisons (2~3 cards). bento cards: first card is the "hero" (large), others are smaller. Max 3 cards.
+7. Use "stat" type ONLY when real numeric/percentage/ratio data exists. stat "value" MUST be a short number or measure (e.g. "47%", "3.2×", "12건", "1일", "99.9%"). NEVER put long text or sentences as a stat value. If no meaningful numeric data exists, use "content" or "two_column" instead.
+8. Use "two_column" for comparisons, before/after, or pros/cons.
+9. Use "quote" for the single most important insight or guiding principle.
+10. agenda "items" should list section titles only (max 5 items).
+11. THEME: Generate a hex color palette that matches the theme description provided.
     If no theme description is given, use this dark navy default:
     bg=#1A1A2E, surface=#16213E, accent=#4D9DFF, text=#FFFFFF, subtext=#AABBCC, body=#DDEEFF
-11. ICONS: Add an "icon" field to every section and content slide using MDI icon names (prefix "mdi:").
-    For stat slides, add "icon" to each stat item. Choose icons that match the content.
+12. ICONS: Add an "icon" field to every section, content, and bento slide using MDI icon names (prefix "mdi:").
+    For stat/bento slides, add "icon" to each stat/card item. Choose icons that match the content.
     Examples: "mdi:database", "mdi:cog-outline", "mdi:chart-timeline-variant", "mdi:account-group",
     "mdi:alert-circle-outline", "mdi:check-circle-outline", "mdi:rocket-launch-outline",
     "mdi:shield-check-outline", "mdi:lightning-bolt", "mdi:trending-up", "mdi:layers-outline"
-12. Respond in the same language as the input content.
+13. Respond in the same language as the input content.
 """
 
 

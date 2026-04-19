@@ -1,5 +1,11 @@
 {% extends "_base.html" %}
 {% block content %}
+<!-- 배경 이미지 (있을 때) -->
+{% if image_url %}
+<div style="position:absolute;inset:0;background:url('{{ image_url }}') center/cover;opacity:0.18;"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(135deg, {{ theme.bg }}f2 55%, {{ theme.bg }}a8);"></div>
+{% endif %}
+
 <!-- 고스트 다이아몬드 배경 -->
 <div style="position:absolute;right:-60px;top:50%;transform:translateY(-50%) rotate(45deg);width:480px;height:480px;background:{{ theme.accent }}12;pointer-events:none;"></div>
 <div style="position:absolute;right:80px;top:50%;transform:translateY(-50%) rotate(45deg);width:260px;height:260px;background:{{ theme.accent }}0a;pointer-events:none;"></div>
@@ -18,7 +24,7 @@
     {% endif %}
     <div style="font-size:14px;font-weight:600;color:{{ theme.accent }};letter-spacing:3px;text-transform:uppercase;">SECTION {{ '%02d' % (index + 1) }}</div>
   </div>
-  <h2 style="font-size:58px;font-weight:800;color:{{ theme.text }};line-height:1.2;letter-spacing:-1px;max-width:800px;">{{ slide.title }}</h2>
+  <h2 style="font-size:58px;font-weight:900;color:{{ theme.text }};line-height:1.2;letter-spacing:-1px;max-width:800px;">{{ slide.title }}</h2>
   {% if slide.subtitle %}
   <p style="margin-top:20px;font-size:22px;color:{{ theme.subtext }};font-weight:400;max-width:700px;line-height:1.5;">{{ slide.subtitle }}</p>
   {% endif %}

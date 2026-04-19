@@ -1,21 +1,36 @@
 {% extends "_base.html" %}
 {% block content %}
-<!-- 배경 장식: 오른쪽 상단 반투명 원 -->
-<div style="position:absolute;top:-120px;right:-120px;width:520px;height:520px;border-radius:50%;background:{{ theme.accent }}18;pointer-events:none;"></div>
-<div style="position:absolute;top:60px;right:60px;width:220px;height:220px;border-radius:50%;background:{{ theme.accent }}10;pointer-events:none;"></div>
+<!-- 오른쪽 이미지 패널 or 기하학 장식 -->
+{% if image_url %}
+<div style="position:absolute;top:0;right:0;width:46%;height:100%;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:url('{{ image_url }}') center/cover;"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to right, {{ theme.bg }} 0%, {{ theme.bg }}cc 30%, {{ theme.bg }}55 70%, transparent 100%);"></div>
+</div>
+{% else %}
+<div style="position:absolute;top:-100px;right:-100px;width:540px;height:540px;border-radius:50%;background:{{ theme.accent }}14;pointer-events:none;"></div>
+<div style="position:absolute;top:80px;right:60px;width:280px;height:280px;border-radius:50%;background:{{ theme.accent }}0c;pointer-events:none;"></div>
+<div style="position:absolute;bottom:40px;right:200px;width:120px;height:120px;border-radius:50%;background:{{ theme.accent }}18;pointer-events:none;"></div>
+{% endif %}
 
 <!-- 왼쪽 세로 액센트 바 -->
-<div style="position:absolute;left:0;top:0;bottom:0;width:6px;background:{{ theme.accent }};"></div>
+<div style="position:absolute;left:0;top:0;bottom:0;width:5px;background:{{ theme.accent }};"></div>
 
-<!-- 하단 얇은 라인 -->
-<div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:{{ theme.accent }};"></div>
+<!-- 하단 그라디언트 라인 -->
+<div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(to right, {{ theme.accent }}, {{ theme.accent }}33);"></div>
 
-<!-- 콘텐츠 중앙 정렬 -->
-<div style="position:absolute;inset:0;left:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 120px;">
-  <h1 style="font-size:56px;font-weight:800;color:{{ theme.text }};text-align:center;line-height:1.25;letter-spacing:-0.5px;margin-bottom:24px;">{{ slide.title }}</h1>
+<!-- 왼쪽 콘텐츠 영역 -->
+<div style="position:absolute;left:5px;top:0;width:58%;height:100%;display:flex;flex-direction:column;justify-content:center;padding:80px 60px 80px 75px;">
+  <!-- 태그 라인 -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+    <div style="width:28px;height:3px;background:{{ theme.accent }};border-radius:2px;"></div>
+    <span style="font-size:12px;font-weight:700;color:{{ theme.accent }};letter-spacing:3.5px;text-transform:uppercase;">PRESENTATION</span>
+  </div>
+  <!-- 메인 제목 -->
+  <h1 style="font-size:52px;font-weight:900;color:{{ theme.text }};line-height:1.2;letter-spacing:-1.5px;margin-bottom:24px;">{{ slide.title }}</h1>
+  <!-- 구분선 -->
   {% if slide.subtitle %}
-  <div style="width:60px;height:3px;background:{{ theme.accent }};border-radius:2px;margin-bottom:20px;"></div>
-  <p style="font-size:22px;font-weight:400;color:{{ theme.subtext }};text-align:center;line-height:1.6;">{{ slide.subtitle }}</p>
+  <div style="width:48px;height:3px;background:{{ theme.accent }};border-radius:2px;margin-bottom:20px;opacity:0.6;"></div>
+  <p style="font-size:19px;font-weight:400;color:{{ theme.subtext }};line-height:1.65;max-width:480px;">{{ slide.subtitle }}</p>
   {% endif %}
 </div>
 {% endblock %}
