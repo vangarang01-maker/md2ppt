@@ -1,7 +1,16 @@
+import re
+
 import httpx
 
 _ICONIFY_BASE = "https://api.iconify.design"
 _TIMEOUT = 5.0
+
+
+def _normalize_svg(svg: str) -> str:
+    """SVG의 고정 width/height(e.g. '1em', '24px')를 100%로 교체해 컨테이너 크기를 따르게 함."""
+    svg = re.sub(r'(<svg[^>]*)\swidth="[^"]*"', r'\1 width="100%"', svg)
+    svg = re.sub(r'(<svg[^>]*)\sheight="[^"]*"', r'\1 height="100%"', svg)
+    return svg
 
 
 def _collect_icon_names(slides_data: dict) -> set[str]:
@@ -31,7 +40,7 @@ async def fetch_icons(slides_data: dict) -> dict[str, str]:
             try:
                 r = await client.get(f"{_ICONIFY_BASE}/{prefix}/{icon}.svg")
                 if r.status_code == 200:
-                    icons[name] = r.text
+                    icons[name] = _normalize_svg(r.text)
             except Exception:
                 pass  # 아이콘 로드 실패 시 해당 아이콘만 건너뜀
 

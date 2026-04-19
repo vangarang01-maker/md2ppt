@@ -20,7 +20,6 @@ JSON schema:
     { "type": "title",      "title": "string", "subtitle": "string" },
     { "type": "agenda",     "title": "string", "items": ["string"] },
     { "type": "section",    "title": "string", "subtitle": "string", "icon": "mdi:icon-name" },
-    { "type": "content",    "title": "string", "icon": "mdi:icon-name", "bullets": ["string"] },
     { "type": "stat",       "title": "string", "stats": [{"label": "string", "value": "string", "icon": "mdi:icon-name"}] },
     { "type": "two_column", "title": "string", "left": {"heading": "string", "bullets": ["string"]}, "right": {"heading": "string", "bullets": ["string"]} },
     { "type": "quote",      "title": "string", "quote": "string", "attribution": "string" },
@@ -33,21 +32,27 @@ JSON schema:
 
 STRICT RULES:
 1. NARRATIVE ARC — slides must follow this order:
-   title → agenda → (section + 1~2 content/stat/two_column/quote) × 2~3 groups → summary
+   title → agenda → (section + 1~2 bento/stat/two_column/quote) × 2~3 groups → summary
 2. MAXIMUM 8 slides total. Quality over quantity.
 3. REWRITE all content in punchy presentation language. Never copy-paste sentences from source.
-4. Each bullet: max 15 words. Start with a relevant emoji (e.g. ⚡ 🔍 ✅ ⚠️ 📊 🎯 🔧 💡 🚀).
-5. Max 3 bullets per content/summary slide.
-6. Use "bento" type for feature overviews, product highlights, or multi-point comparisons (2~3 cards). bento cards: first card is the "hero" (large), others are smaller. Max 3 cards.
-7. Use "stat" type ONLY when real numeric/percentage/ratio data exists. stat "value" MUST be a short number or measure (e.g. "47%", "3.2×", "12건", "1일", "99.9%"). NEVER put long text or sentences as a stat value. If no meaningful numeric data exists, use "content" or "two_column" instead.
-8. Use "two_column" for comparisons, before/after, or pros/cons.
-9. Use "quote" for the single most important insight or guiding principle.
+4. NO BULLET-LIST SLIDES. The "content" type does NOT exist. NEVER output type:"content".
+   Every informational slide MUST be one of: bento, stat, two_column, quote.
+5. "bento" is the PRIMARY content type for any list of points, features, actions, or findings.
+   - Use 3~5 cards per bento slide.
+   - Each card: title (max 6 words) + body (max 25 words) + icon (mdi: prefix).
+   - 3 cards → hero layout (first card large-left, two cards stack right).
+   - 4~5 cards → equal grid layout (no hero).
+6. Use "stat" ONLY when real numeric/percentage/ratio data exists.
+   stat "value" MUST be a short number (e.g. "47%", "3.2×", "12건"). NEVER use sentences as a value.
+7. Use "two_column" for comparisons, before/after, or pros/cons.
+8. Use "quote" for the single most important insight or guiding principle.
+9. Use "summary" for the final slide. 4~5 bullets, each starting with a relevant emoji.
 10. agenda "items" should list section titles only (max 5 items).
 11. THEME: Generate a hex color palette that matches the theme description provided.
     If no theme description is given, use this dark navy default:
     bg=#1A1A2E, surface=#16213E, accent=#4D9DFF, text=#FFFFFF, subtext=#AABBCC, body=#DDEEFF
-12. ICONS: Add an "icon" field to every section, content, and bento slide using MDI icon names (prefix "mdi:").
-    For stat/bento slides, add "icon" to each stat/card item. Choose icons that match the content.
+12. ICONS: Add an "icon" field (mdi: prefix) to every section and bento card.
+    For stat slides, add "icon" to each stat item.
     Examples: "mdi:database", "mdi:cog-outline", "mdi:chart-timeline-variant", "mdi:account-group",
     "mdi:alert-circle-outline", "mdi:check-circle-outline", "mdi:rocket-launch-outline",
     "mdi:shield-check-outline", "mdi:lightning-bolt", "mdi:trending-up", "mdi:layers-outline"

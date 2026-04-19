@@ -19,7 +19,7 @@
     <div style="position:absolute;bottom:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:{{ theme.accent }}0a;pointer-events:none;"></div>
     <!-- 아이콘 -->
     {% if stat.icon and icons.get(stat.icon) %}
-    <div style="color:{{ theme.accent }};width:36px;height:36px;margin-bottom:8px;opacity:0.8;">{{ icons.get(stat.icon) | safe }}</div>
+    <div style="color:{{ theme.accent }};width:52px;height:52px;margin-bottom:12px;opacity:0.8;">{{ icons.get(stat.icon) | safe }}</div>
     {% endif %}
     <!-- 수치 -->
     <div style="font-size:72px;font-weight:900;color:{{ theme.accent }};line-height:1;letter-spacing:-2px;">{{ stat.value }}</div>

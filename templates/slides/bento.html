@@ -4,50 +4,72 @@
 <div style="position:absolute;right:-60px;bottom:-60px;width:300px;height:300px;border-radius:50%;background:{{ theme.accent }}08;pointer-events:none;"></div>
 
 <!-- 제목 영역 -->
-<div style="position:absolute;top:0;left:0;right:0;padding:38px 72px 0;">
-  <h2 style="font-size:32px;font-weight:800;color:{{ theme.text }};letter-spacing:-0.5px;">{{ slide.title }}</h2>
-  <div style="margin-top:10px;width:44px;height:4px;background:{{ theme.accent }};border-radius:2px;"></div>
+<div style="position:absolute;top:0;left:0;right:0;padding:36px 72px 0;">
+  <h2 style="font-size:30px;font-weight:800;color:{{ theme.text }};letter-spacing:-0.5px;">{{ slide.title }}</h2>
+  <div style="margin-top:8px;width:44px;height:4px;background:{{ theme.accent }};border-radius:2px;"></div>
 </div>
 
 <!-- Bento 그리드 -->
 {% set cards = slide.cards %}
 {% set count = cards | length %}
-<div style="position:absolute;top:118px;left:72px;right:72px;bottom:48px;display:grid;gap:16px;
-  {% if count >= 3 %}
-  grid-template-columns: 2fr 1fr;grid-template-rows: 1fr 1fr;
+<div style="position:absolute;top:104px;left:64px;right:64px;bottom:40px;display:grid;gap:12px;
+  {% if count >= 4 %}
+  grid-template-columns:1fr 1fr;grid-template-rows:{% if count == 5 %}1fr 1fr 1fr{% else %}1fr 1fr{% endif %};
+  {% elif count == 3 %}
+  grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;
   {% elif count == 2 %}
-  grid-template-columns: 1fr 1fr;grid-template-rows: 1fr;
+  grid-template-columns:1fr 1fr;grid-template-rows:1fr;
   {% else %}
-  grid-template-columns: 1fr;grid-template-rows: 1fr;
+  grid-template-columns:1fr;grid-template-rows:1fr;
   {% endif %}
 ">
   {% for card in cards %}
   <div style="
     background:{{ theme.surface }};
-    border-radius:16px;
+    border-radius:14px;
     border:1px solid {{ theme.accent }}22;
-    padding:28px 32px;
+    padding:{% if count <= 3 and loop.first %}28px 32px{% else %}20px 24px{% endif %};
     display:flex;flex-direction:column;justify-content:space-between;
     position:relative;overflow:hidden;
-    {% if loop.first and count >= 3 %}grid-row: 1 / span 2;{% endif %}
+    {% if count == 3 and loop.first %}grid-row:1 / span 2;{% endif %}
+    {% if count == 5 and loop.last %}grid-column:1 / span 2;{% endif %}
   ">
-    <!-- 상단 액센트 스트라이프 -->
-    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:{{ theme.accent }};{% if not loop.first %}opacity:0.4;{% endif %}"></div>
+    <!-- 상단 액센트 라인 -->
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:{{ theme.accent }};{% if not (loop.first and count <= 3) %}opacity:0.35;{% endif %}"></div>
+    <!-- 그리드 레이아웃(4~5카드) 배경 이미지 -->
+    {% if count >= 4 and image_url and loop.first %}
+    <div style="position:absolute;inset:0;background:url('{{ image_url }}') center/cover;opacity:0.12;border-radius:14px;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg, {{ theme.surface }} 40%, transparent 100%);border-radius:14px;"></div>
+    {% endif %}
     <!-- 배경 원 장식 -->
-    <div style="position:absolute;bottom:-24px;right:-24px;width:100px;height:100px;border-radius:50%;background:{{ theme.accent }}08;pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:{{ theme.accent }}06;pointer-events:none;"></div>
 
     <div>
       <!-- 아이콘 -->
       {% if card.icon and icons.get(card.icon) %}
-      <div style="color:{{ theme.accent }};width:{% if loop.first and count >= 3 %}32px{% else %}24px{% endif %};height:{% if loop.first and count >= 3 %}32px{% else %}24px{% endif %};margin-bottom:12px;opacity:0.9;">{{ icons.get(card.icon) | safe }}</div>
+      <div style="color:{{ theme.accent }};width:{% if count <= 3 and loop.first %}44px{% else %}34px{% endif %};height:{% if count <= 3 and loop.first %}44px{% else %}34px{% endif %};margin-bottom:10px;opacity:0.9;">{{ icons.get(card.icon) | safe }}</div>
       {% endif %}
       <!-- 제목 -->
-      <div style="font-size:{% if loop.first and count >= 3 %}22px{% else %}17px{% endif %};font-weight:700;color:{{ theme.text }};line-height:1.35;margin-bottom:10px;">{{ card.title }}</div>
+      <div style="font-size:{% if count <= 3 and loop.first %}20px{% else %}16px{% endif %};font-weight:700;color:{{ theme.text }};line-height:1.3;margin-bottom:8px;">{{ card.title }}</div>
       <!-- 본문 -->
       {% if card.body %}
-      <p style="font-size:{% if loop.first and count >= 3 %}17px{% else %}14px{% endif %};font-weight:400;color:{{ theme.body }};line-height:1.55;">{{ card.body }}</p>
+      <p style="font-size:{% if count <= 3 and loop.first %}15px{% else %}13px{% endif %};font-weight:400;color:{{ theme.body }};line-height:1.55;">{{ card.body }}</p>
       {% endif %}
     </div>
+    <!-- 히어로 카드 하단 이미지 (3카드 레이아웃, 첫 번째 카드에만) -->
+    {% if count == 3 and loop.first and image_url %}
+    <div style="
+      margin: 12px -32px -28px;
+      height: 180px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0 0 14px 14px;
+      flex-shrink: 0;
+    ">
+      <div style="position:absolute;inset:0;background:url('{{ image_url }}') center/cover;"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom, {{ theme.surface }} 0%, {{ theme.surface }}88 25%, transparent 100%);"></div>
+    </div>
+    {% endif %}
   </div>
   {% endfor %}
 </div>

@@ -352,8 +352,12 @@
         <span>Claude</span>
       </div>
       <div class="key-badge">
-        <div class="dot" id="dot-unsplash"></div>
-        <span>Unsplash</span>
+        <div class="dot" id="dot-openai"></div>
+        <span>OpenAI</span>
+      </div>
+      <div class="key-badge">
+        <div class="dot" id="dot-pexels"></div>
+        <span>Pexels</span>
       </div>
     </div>
 
@@ -372,9 +376,17 @@
     <div class="divider"></div>
 
     <div class="field">
-      <label>Unsplash Access Key <span style="color:var(--accent);font-size:0.7rem;letter-spacing:0;text-transform:none;">(선택 — 슬라이드 배경 이미지)</span></label>
-      <input id="unsplash-key" type="password" placeholder="...Unsplash Access Key..." />
-      <p class="hint">없으면 단색 배경으로 동작합니다. unsplash.com/developers에서 무료 발급 가능.</p>
+      <label>OpenAI API Key <span style="color:var(--accent);font-size:0.7rem;letter-spacing:0;text-transform:none;">(권장 — DALL-E 3 배경 이미지 생성)</span></label>
+      <input id="openai-key" type="password" placeholder="sk-..." />
+      <p class="hint">설정 시 title·section·quote 슬라이드에 AI 이미지가 자동 생성됩니다.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field">
+      <label>Pexels API Key <span style="color:var(--subtext);font-size:0.7rem;letter-spacing:0;text-transform:none;">(선택 — OpenAI 키 없을 때 폴백)</span></label>
+      <input id="pexels-key" type="password" placeholder="...Pexels API Key..." />
+      <p class="hint">OpenAI 키가 있으면 DALL-E 3를 우선 사용합니다. www.pexels.com/api 에서 무료 발급.</p>
     </div>
 
     <button class="btn btn-primary" onclick="saveSettings()">저장</button>
@@ -467,9 +479,10 @@
 
   async function saveSettings() {
     const body = {
-      claude_key: document.getElementById('claude-key').value.trim(),
-      gemini_key: document.getElementById('gemini-key').value.trim(),
-      unsplash_key: document.getElementById('unsplash-key').value.trim(),
+      claude_key:   document.getElementById('claude-key').value.trim(),
+      gemini_key:   document.getElementById('gemini-key').value.trim(),
+      openai_key:  document.getElementById('openai-key').value.trim(),
+      pexels_key:  document.getElementById('pexels-key').value.trim(),
     };
     const res = await fetch('/api/settings', {
       method: 'POST',
@@ -483,7 +496,8 @@
       loadKeyStatus();
       document.getElementById('claude-key').value = '';
       document.getElementById('gemini-key').value = '';
-      document.getElementById('unsplash-key').value = '';
+      document.getElementById('openai-key').value = '';
+      document.getElementById('pexels-key').value = '';
     } else {
       r.className = 'result error';
       r.textContent = '저장 실패';
@@ -493,9 +507,10 @@
   async function loadKeyStatus() {
     const res = await fetch('/api/settings');
     const data = await res.json();
-    document.getElementById('dot-claude').className = 'dot' + (data.claude ? ' set' : '');
-    document.getElementById('dot-gemini').className = 'dot' + (data.gemini ? ' set' : '');
-    document.getElementById('dot-unsplash').className = 'dot' + (data.unsplash ? ' set' : '');
+    document.getElementById('dot-claude').className   = 'dot' + (data.claude   ? ' set' : '');
+    document.getElementById('dot-gemini').className   = 'dot' + (data.gemini   ? ' set' : '');
+    document.getElementById('dot-openai').className = 'dot' + (data.openai ? ' set' : '');
+    document.getElementById('dot-pexels').className = 'dot' + (data.pexels  ? ' set' : '');
   }
 
   loadKeyStatus();
