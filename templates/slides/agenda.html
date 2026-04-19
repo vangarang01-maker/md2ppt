@@ -1,0 +1,21 @@
+{% extends "_base.html" %}
+{% block content %}
+<!-- 배경 장식 -->
+<div style="position:absolute;right:-80px;bottom:-80px;width:360px;height:360px;border-radius:50%;background:{{ theme.accent }}0e;pointer-events:none;"></div>
+
+<!-- 상단 제목 영역 -->
+<div style="position:absolute;top:0;left:0;right:0;padding:52px 80px 0;">
+  <h2 style="font-size:34px;font-weight:700;color:{{ theme.text }};letter-spacing:-0.3px;">{{ slide.title }}</h2>
+  <div style="margin-top:10px;width:48px;height:4px;background:{{ theme.accent }};border-radius:2px;"></div>
+</div>
+
+<!-- 아이템 목록 -->
+<div style="position:absolute;top:160px;left:80px;right:80px;bottom:60px;display:flex;flex-direction:column;justify-content:center;gap:0;">
+  {% for item in slide['items'] %}
+  <div style="display:flex;align-items:center;gap:28px;padding:16px 0;border-bottom:1px solid {{ theme.accent }}22;">
+    <span style="font-size:42px;font-weight:900;color:{{ theme.accent }};line-height:1;min-width:56px;text-align:right;opacity:0.9;">{{ '%02d' % loop.index }}</span>
+    <span style="font-size:22px;font-weight:500;color:{{ theme.body }};line-height:1.4;">{{ item }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

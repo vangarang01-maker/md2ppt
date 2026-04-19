@@ -1,0 +1,67 @@
+{% extends "_base.html" %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<!-- 제목 영역 -->
+<div style="position:absolute;top:0;left:0;right:0;padding:52px 80px 0;">
+  <h2 style="font-size:34px;font-weight:700;color:{{ theme.text }};letter-spacing:-0.3px;">{{ slide.title }}</h2>
+  <div style="margin-top:10px;width:48px;height:4px;background:{{ theme.accent }};border-radius:2px;"></div>
+</div>
+
+<!-- 차트 캔버스 -->
+<div style="position:absolute;top:150px;left:60px;right:60px;bottom:40px;display:flex;align-items:center;justify-content:center;">
+  <canvas id="chart" style="max-width:100%;max-height:100%;"></canvas>
+</div>
+
+<script>
+(function() {
+  const ctx = document.getElementById('chart').getContext('2d');
+  const chartTypes = { bar: 'bar', column: 'bar', line: 'line', pie: 'pie' };
+  const type = chartTypes['{{ slide.chart_type }}'] || 'bar';
+  const isHorizontal = '{{ slide.chart_type }}' === 'bar';
+
+  const accent = '{{ theme.accent }}';
+  const palette = [
+    accent,
+    accent + 'bb', accent + '88', accent + '55',
+    '{{ theme.subtext }}', '{{ theme.body }}'
+  ];
+
+  const datasets = [
+    {% for s in slide.series %}
+    {
+      label: '{{ s.name }}',
+      data: {{ s['values'] | tojson }},
+      backgroundColor: palette[{{ loop.index0 }} % palette.length],
+      borderColor: palette[{{ loop.index0 }} % palette.length],
+      borderWidth: 2,
+      borderRadius: type === 'bar' ? 6 : 0,
+    },
+    {% endfor %}
+  ];
+
+  new Chart(ctx, {
+    type: type,
+    data: {
+      labels: {{ slide.categories | tojson }},
+      datasets: datasets,
+    },
+    options: {
+      indexAxis: isHorizontal ? 'y' : 'x',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: datasets.length > 1,
+          labels: { color: '{{ theme.subtext }}', font: { size: 13 } }
+        }
+      },
+      scales: type === 'pie' ? {} : {
+        x: { ticks: { color: '{{ theme.subtext }}' }, grid: { color: '{{ theme.accent }}18' } },
+        y: { ticks: { color: '{{ theme.subtext }}' }, grid: { color: '{{ theme.accent }}18' } },
+      }
+    }
+  });
+})();
+</script>
+{% endblock %}

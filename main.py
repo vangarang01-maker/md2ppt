@@ -1,5 +1,6 @@
 import asyncio
 import json
+import shutil
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -8,7 +9,9 @@ from pydantic import BaseModel
 
 from pipeline.reader import read_md_files
 from pipeline.structurer import structure_slides
-from pipeline.pptx_builder import build_pptx
+from pipeline.html_renderer import render_all_slides
+from pipeline.screenshot import screenshot_slides
+from pipeline.image_pptx import build_pptx_from_images
 from storage import KeyStore
 
 app = FastAPI(title="MD → PPT 파이프라인")
@@ -72,17 +75,51 @@ async def generate(
 
             slides_data = await structure_slides(md_content, model, api_key, theme, goal, audience)
 
-            yield event(70, "PPT 생성 중...")
+            yield event(60, "슬라이드 HTML 렌더링 중...")
+            html_slides = render_all_slides(slides_data)
+
+            yield event(75, f"슬라이드 {len(html_slides)}장 스크린샷 캡처 중...")
             await asyncio.sleep(0.05)
 
-            out_path = await asyncio.to_thread(build_pptx, slides_data, output)
+            tmp_dir = str(Path(output) / ".tmp_screenshots")
+            image_paths = await screenshot_slides(html_slides, tmp_dir)
+
+            yield event(92, "PPT 파일 조립 중...")
+            await asyncio.sleep(0.05)
+
+            out_path = await asyncio.to_thread(
+                build_pptx_from_images, image_paths, slides_data.get("title", ""), output
+            )
+            shutil.rmtree(tmp_dir, ignore_errors=True)
 
             yield event(100, "완료!", file=out_path)
 
         except Exception as e:
-            yield f"data: {json.dumps({'error': str(e)}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'error': _friendly_error(e)}, ensure_ascii=False)}\n\n"
 
     return StreamingResponse(stream(), media_type="text/event-stream")
+
+
+def _friendly_error(e: Exception) -> str:
+    msg = str(e)
+    m = msg.lower()
+
+    if "503" in msg or "unavailable" in m or "high demand" in m:
+        return "AI 서버가 일시적으로 과부하 상태입니다. 잠시 후 다시 시도해주세요. (503 Unavailable)"
+    if "429" in msg or "quota" in m or "rate limit" in m or "resource_exhausted" in m:
+        return "API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요. (Rate Limit)"
+    if "401" in msg or "403" in msg or "invalid api key" in m or "api_key" in m or "unauthenticated" in m:
+        return "API 키가 올바르지 않습니다. 설정 탭에서 키를 확인해주세요. (Authentication Error)"
+    if "폴더가 존재하지 않습니다" in msg:
+        return f"입력한 폴더 경로를 찾을 수 없습니다: {msg}"
+    if "유효한 json" in m or "json" in m and "반환하지 않았습니다" in msg:
+        return "AI가 슬라이드 구조 생성에 실패했습니다. 다시 시도하거나 다른 모델을 사용해보세요."
+    if "executable doesn't exist" in m or "playwright" in m or "chromium" in m or "browser" in m:
+        return "Playwright Chromium이 설치되지 않았습니다. 터미널에서 'playwright install chromium' 을 실행해주세요."
+    if "connection" in m or "timeout" in m or "timed out" in m:
+        return "네트워크 연결 오류가 발생했습니다. 인터넷 연결을 확인하고 다시 시도해주세요."
+
+    return f"오류가 발생했습니다: {msg}"
 
 
 if __name__ == "__main__":

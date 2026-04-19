@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+{% block content %}
+<!-- 상단 액센트 라인 -->
+<div style="position:absolute;top:0;left:0;right:0;height:5px;background:{{ theme.accent }};"></div>
+<!-- 하단 액센트 라인 -->
+<div style="position:absolute;bottom:0;left:0;right:0;height:5px;background:{{ theme.accent }};"></div>
+
+<!-- 배경 장식 원 -->
+<div style="position:absolute;left:-60px;bottom:-60px;width:320px;height:320px;border-radius:50%;background:{{ theme.accent }}10;pointer-events:none;"></div>
+
+<!-- 큰 따옴표 -->
+<div style="position:absolute;top:52px;left:72px;font-size:120px;font-weight:900;color:{{ theme.accent }};line-height:1;opacity:0.8;font-family:Georgia,serif;">&#8220;</div>
+
+<!-- 인용문 콘텐츠 -->
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:100px 120px 80px;">
+  <blockquote style="font-size:28px;font-weight:500;color:{{ theme.text }};line-height:1.65;letter-spacing:-0.2px;">{{ slide.quote }}</blockquote>
+  {% if slide.attribution %}
+  <div style="margin-top:32px;display:flex;align-items:center;gap:16px;">
+    <div style="width:36px;height:2px;background:{{ theme.accent }};"></div>
+    <span style="font-size:16px;color:{{ theme.subtext }};font-weight:500;letter-spacing:0.5px;">{{ slide.attribution }}</span>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

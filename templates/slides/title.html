@@ -1,0 +1,21 @@
+{% extends "_base.html" %}
+{% block content %}
+<!-- 배경 장식: 오른쪽 상단 반투명 원 -->
+<div style="position:absolute;top:-120px;right:-120px;width:520px;height:520px;border-radius:50%;background:{{ theme.accent }}18;pointer-events:none;"></div>
+<div style="position:absolute;top:60px;right:60px;width:220px;height:220px;border-radius:50%;background:{{ theme.accent }}10;pointer-events:none;"></div>
+
+<!-- 왼쪽 세로 액센트 바 -->
+<div style="position:absolute;left:0;top:0;bottom:0;width:6px;background:{{ theme.accent }};"></div>
+
+<!-- 하단 얇은 라인 -->
+<div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:{{ theme.accent }};"></div>
+
+<!-- 콘텐츠 중앙 정렬 -->
+<div style="position:absolute;inset:0;left:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 120px;">
+  <h1 style="font-size:56px;font-weight:800;color:{{ theme.text }};text-align:center;line-height:1.25;letter-spacing:-0.5px;margin-bottom:24px;">{{ slide.title }}</h1>
+  {% if slide.subtitle %}
+  <div style="width:60px;height:3px;background:{{ theme.accent }};border-radius:2px;margin-bottom:20px;"></div>
+  <p style="font-size:22px;font-weight:400;color:{{ theme.subtext }};text-align:center;line-height:1.6;">{{ slide.subtitle }}</p>
+  {% endif %}
+</div>
+{% endblock %}
