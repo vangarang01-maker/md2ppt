@@ -1,21 +1,26 @@
 {% extends "_base.html" %}
 {% block content %}
-<!-- 상단 액센트 헤더 밴드 -->
-<div style="position:absolute;top:0;left:0;right:0;height:110px;background:{{ theme.accent }};"></div>
+<!-- 배경 장식 -->
+<div style="position:absolute;right:-80px;bottom:-80px;width:360px;height:360px;border-radius:50%;background:{{ theme.accent }}08;pointer-events:none;"></div>
+<div style="position:absolute;left:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:{{ theme.accent }}06;pointer-events:none;"></div>
 
-<!-- 헤더 제목 -->
-<div style="position:absolute;top:0;left:0;right:0;height:110px;display:flex;align-items:center;padding:0 80px;">
-  <h2 style="font-size:36px;font-weight:800;color:{{ theme.bg }};letter-spacing:-0.3px;">{{ slide.title }}</h2>
+<!-- 하단 액센트 바 -->
+<div style="position:absolute;bottom:0;left:0;right:0;height:5px;background:{{ theme.accent }};"></div>
+
+<!-- 제목 영역 -->
+<div style="position:absolute;top:0;left:0;right:0;padding:52px 80px 0;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div style="width:6px;height:36px;background:{{ theme.accent }};border-radius:3px;flex-shrink:0;"></div>
+    <h2 style="font-size:36px;font-weight:800;color:{{ theme.text }};letter-spacing:-0.3px;">{{ slide.title }}</h2>
+  </div>
+  <div style="margin-top:12px;width:52px;height:4px;background:{{ theme.accent }};border-radius:2px;margin-left:18px;"></div>
 </div>
 
-<!-- 배경 장식 -->
-<div style="position:absolute;right:-60px;bottom:-60px;width:300px;height:300px;border-radius:50%;background:{{ theme.accent }}0c;pointer-events:none;"></div>
-
 <!-- 요약 불릿 -->
-<div style="position:absolute;top:150px;left:80px;right:80px;bottom:60px;display:flex;flex-direction:column;justify-content:center;gap:0;">
+<div style="position:absolute;top:160px;left:80px;right:80px;bottom:60px;display:flex;flex-direction:column;justify-content:center;gap:0;">
   {% for bullet in slide.bullets %}
   <div style="display:flex;align-items:flex-start;gap:24px;padding:20px 0;border-bottom:1px solid {{ theme.accent }}20;">
-    <div style="min-width:32px;height:32px;border-radius:50%;background:{{ theme.accent }};display:flex;align-items:center;justify-content:center;margin-top:2px;">
+    <div style="min-width:32px;height:32px;border-radius:50%;background:{{ theme.accent }};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
       <span style="font-size:14px;font-weight:700;color:{{ theme.bg }};">{{ loop.index }}</span>
     </div>
     <p style="font-size:22px;font-weight:400;color:{{ theme.body }};line-height:1.55;">{{ bullet }}</p>

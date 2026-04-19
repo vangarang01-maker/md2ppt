@@ -37,7 +37,7 @@ STRICT RULES:
 3. REWRITE all content in punchy presentation language. Never copy-paste sentences from source.
 4. Each bullet: max 15 words. Start with a relevant emoji (e.g. ⚡ 🔍 ✅ ⚠️ 📊 🎯 🔧 💡 🚀).
 5. Max 3 bullets per content/summary slide.
-6. Use "stat" type for numeric data, KPIs, or metrics (up to 3 stats per slide).
+6. Use "stat" type ONLY when real numeric/percentage/ratio data exists. stat "value" MUST be a short number or measure (e.g. "47%", "3.2×", "12건", "1일", "99.9%"). NEVER put long text or sentences as a stat value. If no meaningful numeric data exists, use "content" or "two_column" instead.
 7. Use "two_column" for comparisons, before/after, or pros/cons.
 8. Use "quote" for the single most important insight or guiding principle.
 9. agenda "items" should list section titles only (max 5 items).
