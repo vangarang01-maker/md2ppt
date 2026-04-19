@@ -14,11 +14,11 @@
 <div style="position:absolute;left:0;top:0;bottom:0;width:8px;background:{{ theme.accent }};"></div>
 
 <!-- 섹션 번호 (희미하게) -->
-<div style="position:absolute;right:120px;bottom:20px;font-size:160px;font-weight:900;color:{{ theme.accent }}20;line-height:1;letter-spacing:-4px;pointer-events:none;user-select:none;">{{ '%02d' % (index + 1) }}</div>
+<div style="position:absolute;right:120px;bottom:20px;font-size:160px;font-weight:900;color:{{ theme.accent }}20;line-height:1;letter-spacing:-4px;pointer-events:none;user-select:none;">{{ '%02d' % section_num }}</div>
 
 <!-- 콘텐츠 -->
 <div style="position:absolute;inset:0;left:8px;display:flex;flex-direction:column;justify-content:center;padding:80px 100px 80px 80px;">
-  <div style="font-size:14px;font-weight:600;color:{{ theme.accent }};letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;">SECTION {{ '%02d' % (index + 1) }}</div>
+  <div style="font-size:14px;font-weight:600;color:{{ theme.accent }};letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;">SECTION {{ '%02d' % section_num }}</div>
   <div style="display:flex;align-items:center;gap:18px;">
     {% if slide.icon and icons.get(slide.icon) %}
     <div style="color:{{ theme.accent }};width:56px;height:56px;flex-shrink:0;">{{ icons.get(slide.icon) | safe }}</div>

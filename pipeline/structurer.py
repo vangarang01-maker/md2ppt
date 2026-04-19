@@ -34,7 +34,8 @@ STRICT RULES:
 1. NARRATIVE ARC — slides must follow this order:
    title → agenda → (section + 1~2 content slides) × 2~3 groups → summary
    Content slides per group MUST vary — never use the same type twice in a row.
-2. MAXIMUM 10 slides total. Quality over quantity.
+2. MAXIMUM 7 slides total. Fewer slides, maximum information density per slide.
+   Pack ALL data points from the source into these slides — do NOT omit or thin out information.
 3. REWRITE all content in punchy presentation language. Never copy-paste sentences from source.
 4. NO BULLET-LIST SLIDES. The "content" type does NOT exist. NEVER output type:"content".
    Every informational slide MUST be one of: bento, stat, chart, two_column, quote.
@@ -53,7 +54,7 @@ STRICT RULES:
    │ two_column  │ Comparisons, before/after, pros/cons, A vs B               │
    ├─────────────┼────────────────────────────────────────────────────────────┤
    │ bento       │ Lists of features, findings, actions, steps (no numbers)   │
-   │             │ 3~5 cards, each: title(≤6 words) + body(≤25 words) + icon  │
+   │             │ 4~6 cards, each: title(≤6 words) + body(≤45 words) + icon  │
    ├─────────────┼────────────────────────────────────────────────────────────┤
    │ quote       │ Single most important insight or guiding principle          │
    └─────────────┴────────────────────────────────────────────────────────────┘
@@ -68,21 +69,28 @@ STRICT RULES:
 7. STAT rules: 2~3 stats max. Each stat needs icon (mdi: prefix).
    value MUST be a short number. NEVER use sentences as a value.
 
-8. Use "summary" for the final slide. 4~5 bullets, each starting with a relevant emoji.
+8. two_column rules: each side MUST have 5~7 bullets. Do not use 2~3 bullets.
 
-9. agenda "items" should list section titles only (max 5 items).
+9. Use "summary" for the final slide. 4~5 bullets, each starting with a relevant emoji.
 
-10. THEME: Generate a hex color palette that matches the theme description provided.
+10. AGENDA ↔ SECTION CONSISTENCY (CRITICAL):
+    agenda items MUST be EXACTLY the same text as the corresponding section slide titles.
+    The agenda lists section titles in order — every section slide title must appear verbatim in agenda items.
+    Do NOT paraphrase or shorten section titles in the agenda.
+
+11. agenda "items" should list section titles only (max 5 items).
+
+12. THEME: Generate a hex color palette that matches the theme description provided.
     If no theme description is given, use this dark navy default:
     bg=#1A1A2E, surface=#16213E, accent=#4D9DFF, text=#FFFFFF, subtext=#AABBCC, body=#DDEEFF
 
-11. ICONS: Add an "icon" field (mdi: prefix) to every section and bento card.
+13. ICONS: Add an "icon" field (mdi: prefix) to every section and bento card.
     For stat slides, add "icon" to each stat item.
     Examples: "mdi:database", "mdi:cog-outline", "mdi:chart-timeline-variant", "mdi:account-group",
     "mdi:alert-circle-outline", "mdi:check-circle-outline", "mdi:rocket-launch-outline",
     "mdi:shield-check-outline", "mdi:lightning-bolt", "mdi:trending-up", "mdi:layers-outline"
 
-12. Respond in the same language as the input content.
+14. Respond in the same language as the input content.
 """
 
 

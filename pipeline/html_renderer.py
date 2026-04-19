@@ -39,9 +39,12 @@ def render_all_slides(
     images = images or {}
     chartjs = _load_chartjs()
 
+    section_num = 0
     html_slides = []
     for i, slide in enumerate(slides_data.get("slides", [])):
         slide_type = slide.get("type", "content")
+        if slide_type == "section":
+            section_num += 1
         try:
             template = env.get_template(f"{slide_type}.html")
         except Exception:
@@ -51,6 +54,7 @@ def render_all_slides(
                 slide=slide, theme=theme, index=i,
                 icons=icons, image_url=images.get(i, ""),
                 chartjs=chartjs,
+                section_num=section_num,
             )
         )
 

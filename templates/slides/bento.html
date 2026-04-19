@@ -12,9 +12,11 @@
 <!-- Bento 그리드 -->
 {% set cards = slide.cards %}
 {% set count = cards | length %}
-<div style="position:absolute;top:104px;left:64px;right:64px;bottom:40px;display:grid;gap:12px;
-  {% if count >= 4 %}
-  grid-template-columns:1fr 1fr;grid-template-rows:{% if count == 5 %}1fr 1fr 1fr{% else %}1fr 1fr{% endif %};
+<div style="position:absolute;top:104px;left:64px;right:64px;bottom:40px;display:grid;gap:10px;
+  {% if count >= 5 %}
+  grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;
+  {% elif count == 4 %}
+  grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
   {% elif count == 3 %}
   grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;
   {% elif count == 2 %}
@@ -28,8 +30,8 @@
     background:{{ theme.surface }};
     border-radius:14px;
     border:1px solid {{ theme.accent }}22;
-    padding:{% if count <= 3 and loop.first %}28px 32px{% else %}20px 24px{% endif %};
-    display:flex;flex-direction:column;justify-content:space-between;
+    padding:{% if count <= 3 and loop.first %}24px 28px{% elif count >= 5 %}14px 16px{% else %}18px 20px{% endif %};
+    display:flex;flex-direction:column;justify-content:flex-start;
     position:relative;overflow:hidden;
     {% if count == 3 and loop.first %}grid-row:1 / span 2;{% endif %}
     {% if count == 5 and loop.last %}grid-column:1 / span 2;{% endif %}
@@ -50,10 +52,10 @@
       <div style="color:{{ theme.accent }};width:{% if count <= 3 and loop.first %}44px{% else %}34px{% endif %};height:{% if count <= 3 and loop.first %}44px{% else %}34px{% endif %};margin-bottom:10px;opacity:0.9;">{{ icons.get(card.icon) | safe }}</div>
       {% endif %}
       <!-- 제목 -->
-      <div style="font-size:{% if count <= 3 and loop.first %}20px{% else %}16px{% endif %};font-weight:700;color:{{ theme.text }};line-height:1.3;margin-bottom:8px;">{{ card.title }}</div>
+      <div style="font-size:{% if count <= 3 and loop.first %}19px{% elif count >= 5 %}13px{% else %}15px{% endif %};font-weight:700;color:{{ theme.text }};line-height:1.3;margin-bottom:6px;">{{ card.title }}</div>
       <!-- 본문 -->
       {% if card.body %}
-      <p style="font-size:{% if count <= 3 and loop.first %}15px{% else %}13px{% endif %};font-weight:400;color:{{ theme.body }};line-height:1.55;">{{ card.body }}</p>
+      <p style="font-size:{% if count <= 3 and loop.first %}14px{% elif count >= 5 %}12px{% else %}13px{% endif %};font-weight:400;color:{{ theme.body }};line-height:1.55;">{{ card.body }}</p>
       {% endif %}
     </div>
     <!-- 히어로 카드 하단 이미지 (3카드 레이아웃, 첫 번째 카드에만) -->
