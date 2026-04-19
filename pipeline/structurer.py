@@ -19,9 +19,9 @@ JSON schema:
   "slides": [
     { "type": "title",      "title": "string", "subtitle": "string" },
     { "type": "agenda",     "title": "string", "items": ["string"] },
-    { "type": "section",    "title": "string", "subtitle": "string" },
-    { "type": "content",    "title": "string", "bullets": ["string"] },
-    { "type": "stat",       "title": "string", "stats": [{"label": "string", "value": "string"}] },
+    { "type": "section",    "title": "string", "subtitle": "string", "icon": "mdi:icon-name" },
+    { "type": "content",    "title": "string", "icon": "mdi:icon-name", "bullets": ["string"] },
+    { "type": "stat",       "title": "string", "stats": [{"label": "string", "value": "string", "icon": "mdi:icon-name"}] },
     { "type": "two_column", "title": "string", "left": {"heading": "string", "bullets": ["string"]}, "right": {"heading": "string", "bullets": ["string"]} },
     { "type": "quote",      "title": "string", "quote": "string", "attribution": "string" },
     { "type": "chart",      "title": "string", "chart_type": "bar|column|line|pie",
@@ -44,7 +44,12 @@ STRICT RULES:
 10. THEME: Generate a hex color palette that matches the theme description provided.
     If no theme description is given, use this dark navy default:
     bg=#1A1A2E, surface=#16213E, accent=#4D9DFF, text=#FFFFFF, subtext=#AABBCC, body=#DDEEFF
-11. Respond in the same language as the input content.
+11. ICONS: Add an "icon" field to every section and content slide using MDI icon names (prefix "mdi:").
+    For stat slides, add "icon" to each stat item. Choose icons that match the content.
+    Examples: "mdi:database", "mdi:cog-outline", "mdi:chart-timeline-variant", "mdi:account-group",
+    "mdi:alert-circle-outline", "mdi:check-circle-outline", "mdi:rocket-launch-outline",
+    "mdi:shield-check-outline", "mdi:lightning-bolt", "mdi:trending-up", "mdi:layers-outline"
+12. Respond in the same language as the input content.
 """
 
 

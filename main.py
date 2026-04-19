@@ -12,6 +12,7 @@ from pipeline.structurer import structure_slides
 from pipeline.html_renderer import render_all_slides
 from pipeline.screenshot import screenshot_slides
 from pipeline.image_pptx import build_pptx_from_images
+from pipeline.icon_fetcher import fetch_icons
 from storage import KeyStore
 
 app = FastAPI(title="MD → PPT 파이프라인")
@@ -75,8 +76,11 @@ async def generate(
 
             slides_data = await structure_slides(md_content, model, api_key, theme, goal, audience)
 
-            yield event(60, "슬라이드 HTML 렌더링 중...")
-            html_slides = render_all_slides(slides_data)
+            yield event(55, "아이콘 리소스 로드 중...")
+            icons = await fetch_icons(slides_data)
+
+            yield event(62, "슬라이드 HTML 렌더링 중...")
+            html_slides = render_all_slides(slides_data, icons)
 
             yield event(75, f"슬라이드 {len(html_slides)}장 스크린샷 캡처 중...")
             await asyncio.sleep(0.05)
