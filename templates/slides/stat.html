@@ -1,7 +1,10 @@
 {% extends "_base.html" %}
 {% block content %}
+<!-- 배경 장식 -->
+<div style="position:absolute;right:-80px;bottom:-80px;width:360px;height:360px;border-radius:50%;background:{{ theme.accent }}06;pointer-events:none;"></div>
+
 <!-- 제목 영역 -->
-<div style="position:absolute;top:0;left:0;right:0;padding:52px 80px 0;">
+<div style="position:absolute;top:0;left:0;right:0;padding:44px 80px 0;">
   <h2 style="font-size:34px;font-weight:700;color:{{ theme.text }};letter-spacing:-0.3px;">{{ slide.title }}</h2>
   <div style="margin-top:10px;width:48px;height:4px;background:{{ theme.accent }};border-radius:2px;"></div>
 </div>
@@ -9,22 +12,61 @@
 <!-- 스탯 카드 -->
 {% set stats = slide.stats[:3] %}
 {% set count = stats | length %}
-{% set card_width = (1120 / count) - 20 %}
-<div style="position:absolute;top:160px;left:80px;right:80px;bottom:60px;display:flex;align-items:center;justify-content:center;gap:24px;">
+<div style="position:absolute;top:140px;left:64px;right:64px;bottom:48px;display:flex;align-items:stretch;gap:20px;">
   {% for stat in stats %}
-  <div style="flex:1;height:360px;background:{{ theme.surface }};border-radius:16px;border:1px solid {{ theme.accent }}30;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;position:relative;">
-    <!-- 상단 액센트 스트라이프 -->
-    <div style="position:absolute;top:0;left:0;right:0;height:5px;background:{{ theme.accent }};"></div>
-    <!-- 배경 원 장식 -->
-    <div style="position:absolute;bottom:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:{{ theme.accent }}0a;pointer-events:none;"></div>
-    <!-- 아이콘 -->
-    {% if stat.icon and icons.get(stat.icon) %}
-    <div style="color:{{ theme.accent }};width:52px;height:52px;margin-bottom:12px;opacity:0.8;">{{ icons.get(stat.icon) | safe }}</div>
-    {% endif %}
+  {% set raw = stat.value | string | replace('%','') | replace('×','') | replace(',','') | replace('건','') | replace('개','') | replace('+','') | replace('억','') | replace('만','') | trim %}
+  {% set pct = [[(raw | float(0)) , 0] | max, 100] | min %}
+  <div style="
+    flex:1;
+    background:{{ theme.surface }};
+    border-radius:18px;
+    border:1px solid {{ theme.accent }}28;
+    padding:32px 28px 28px;
+    display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+    position:relative;overflow:hidden;
+  ">
+    <!-- 상단 액센트 -->
+    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:{{ theme.accent }};"></div>
+    <!-- 배경 원 -->
+    <div style="position:absolute;bottom:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:{{ theme.accent }}07;pointer-events:none;"></div>
+
+    <!-- 원형 게이지 (SVG) -->
+    <div style="position:relative;width:130px;height:130px;flex-shrink:0;">
+      <svg viewBox="0 0 120 120" width="130" height="130" style="transform:rotate(-90deg);">
+        <!-- 트랙 -->
+        <circle cx="60" cy="60" r="50" fill="none" stroke="{{ theme.accent }}18" stroke-width="10"/>
+        <!-- 진행 -->
+        <circle cx="60" cy="60" r="50" fill="none"
+          stroke="{{ theme.accent }}" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="{{ (pct / 100 * 314.16) | round(1) }} 314.16"
+          style="transition:stroke-dasharray 0.6s ease;"/>
+      </svg>
+      <!-- 아이콘 (중앙) -->
+      <div style="
+        position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+        color:{{ theme.accent }};width:44px;height:44px;opacity:0.9;
+      ">
+        {% if stat.icon and icons.get(stat.icon) %}{{ icons.get(stat.icon) | safe }}{% endif %}
+      </div>
+    </div>
+
     <!-- 수치 -->
-    <div style="font-size:72px;font-weight:900;color:{{ theme.accent }};line-height:1;letter-spacing:-2px;">{{ stat.value }}</div>
+    <div style="font-size:{% if count == 1 %}80px{% elif count == 2 %}68px{% else %}56px{% endif %};font-weight:900;color:{{ theme.accent }};line-height:1;letter-spacing:-2px;text-align:center;">
+      {{ stat.value }}
+    </div>
+
+    <!-- 프로그레스 바 -->
+    <div style="width:100%;margin-top:4px;">
+      <div style="width:100%;height:6px;background:{{ theme.accent }}18;border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:{{ pct }}%;background:{{ theme.accent }};border-radius:3px;transition:width 0.6s ease;"></div>
+      </div>
+    </div>
+
     <!-- 레이블 -->
-    <div style="margin-top:16px;font-size:16px;font-weight:500;color:{{ theme.subtext }};letter-spacing:0.5px;text-align:center;padding:0 24px;">{{ stat.label }}</div>
+    <div style="margin-top:12px;font-size:{% if count <= 2 %}17px{% else %}14px{% endif %};font-weight:500;color:{{ theme.subtext }};letter-spacing:0.3px;text-align:center;line-height:1.4;">
+      {{ stat.label }}
+    </div>
   </div>
   {% endfor %}
 </div>

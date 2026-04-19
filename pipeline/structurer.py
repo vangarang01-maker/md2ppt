@@ -32,31 +32,57 @@ JSON schema:
 
 STRICT RULES:
 1. NARRATIVE ARC — slides must follow this order:
-   title → agenda → (section + 1~2 bento/stat/two_column/quote) × 2~3 groups → summary
-2. MAXIMUM 8 slides total. Quality over quantity.
+   title → agenda → (section + 1~2 content slides) × 2~3 groups → summary
+   Content slides per group MUST vary — never use the same type twice in a row.
+2. MAXIMUM 10 slides total. Quality over quantity.
 3. REWRITE all content in punchy presentation language. Never copy-paste sentences from source.
 4. NO BULLET-LIST SLIDES. The "content" type does NOT exist. NEVER output type:"content".
-   Every informational slide MUST be one of: bento, stat, two_column, quote.
-5. "bento" is the PRIMARY content type for any list of points, features, actions, or findings.
-   - Use 3~5 cards per bento slide.
-   - Each card: title (max 6 words) + body (max 25 words) + icon (mdi: prefix).
-   - 3 cards → hero layout (first card large-left, two cards stack right).
-   - 4~5 cards → equal grid layout (no hero).
-6. Use "stat" ONLY when real numeric/percentage/ratio data exists.
-   stat "value" MUST be a short number (e.g. "47%", "3.2×", "12건"). NEVER use sentences as a value.
-7. Use "two_column" for comparisons, before/after, or pros/cons.
-8. Use "quote" for the single most important insight or guiding principle.
-9. Use "summary" for the final slide. 4~5 bullets, each starting with a relevant emoji.
-10. agenda "items" should list section titles only (max 5 items).
-11. THEME: Generate a hex color palette that matches the theme description provided.
+   Every informational slide MUST be one of: bento, stat, chart, two_column, quote.
+
+5. SLIDE TYPE SELECTION — choose the BEST type for the data:
+   ┌─────────────┬────────────────────────────────────────────────────────────┐
+   │ Type        │ When to use                                                │
+   ├─────────────┼────────────────────────────────────────────────────────────┤
+   │ chart       │ ANY trend, ranking, comparison over time, distribution,    │
+   │             │ before/after numbers, or percentage breakdown across items  │
+   │             │ → PREFER chart over stat when 3+ data points exist         │
+   ├─────────────┼────────────────────────────────────────────────────────────┤
+   │ stat        │ 2~3 standalone KPI numbers that stand alone (no trend)     │
+   │             │ value MUST be short: "47%", "3.2×", "12건"                 │
+   ├─────────────┼────────────────────────────────────────────────────────────┤
+   │ two_column  │ Comparisons, before/after, pros/cons, A vs B               │
+   ├─────────────┼────────────────────────────────────────────────────────────┤
+   │ bento       │ Lists of features, findings, actions, steps (no numbers)   │
+   │             │ 3~5 cards, each: title(≤6 words) + body(≤25 words) + icon  │
+   ├─────────────┼────────────────────────────────────────────────────────────┤
+   │ quote       │ Single most important insight or guiding principle          │
+   └─────────────┴────────────────────────────────────────────────────────────┘
+
+6. CHART rules:
+   - chart_type: "column" for category comparisons, "bar" for rankings,
+     "line" for trends over time, "pie" for part-of-whole (max 5 slices).
+   - categories: 3~7 items. series values MUST be real numbers (not strings).
+   - If exact numbers are unknown, estimate plausible representative values.
+   - ALWAYS use chart when the source contains a table, ranking, or numeric list.
+
+7. STAT rules: 2~3 stats max. Each stat needs icon (mdi: prefix).
+   value MUST be a short number. NEVER use sentences as a value.
+
+8. Use "summary" for the final slide. 4~5 bullets, each starting with a relevant emoji.
+
+9. agenda "items" should list section titles only (max 5 items).
+
+10. THEME: Generate a hex color palette that matches the theme description provided.
     If no theme description is given, use this dark navy default:
     bg=#1A1A2E, surface=#16213E, accent=#4D9DFF, text=#FFFFFF, subtext=#AABBCC, body=#DDEEFF
-12. ICONS: Add an "icon" field (mdi: prefix) to every section and bento card.
+
+11. ICONS: Add an "icon" field (mdi: prefix) to every section and bento card.
     For stat slides, add "icon" to each stat item.
     Examples: "mdi:database", "mdi:cog-outline", "mdi:chart-timeline-variant", "mdi:account-group",
     "mdi:alert-circle-outline", "mdi:check-circle-outline", "mdi:rocket-launch-outline",
     "mdi:shield-check-outline", "mdi:lightning-bolt", "mdi:trending-up", "mdi:layers-outline"
-13. Respond in the same language as the input content.
+
+12. Respond in the same language as the input content.
 """
 
 

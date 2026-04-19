@@ -3,6 +3,12 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 TEMPLATES_DIR = Path(__file__).parent.parent / "templates" / "slides"
+_CHARTJS_PATH = Path(__file__).parent.parent / "static" / "vendor" / "chart.umd.min.js"
+
+def _load_chartjs() -> str:
+    if _CHARTJS_PATH.exists():
+        return _CHARTJS_PATH.read_text(encoding="utf-8")
+    return ""
 
 _DEFAULT_THEME = {
     "bg":      "#1A1A2E",
@@ -31,6 +37,7 @@ def render_all_slides(
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
     icons = icons or {}
     images = images or {}
+    chartjs = _load_chartjs()
 
     html_slides = []
     for i, slide in enumerate(slides_data.get("slides", [])):
@@ -40,7 +47,11 @@ def render_all_slides(
         except Exception:
             template = env.get_template("content.html")
         html_slides.append(
-            template.render(slide=slide, theme=theme, index=i, icons=icons, image_url=images.get(i, ""))
+            template.render(
+                slide=slide, theme=theme, index=i,
+                icons=icons, image_url=images.get(i, ""),
+                chartjs=chartjs,
+            )
         )
 
     return html_slides

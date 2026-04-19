@@ -13,8 +13,8 @@ async def screenshot_slides(html_contents: list[str], tmp_dir: str) -> list[str]
         page = await browser.new_page(viewport={"width": 1280, "height": 720})
 
         for i, html in enumerate(html_contents):
-            await page.set_content(html, wait_until="networkidle")
-            await page.wait_for_timeout(400)  # Chart.js 렌더링 완료 대기
+            await page.set_content(html, wait_until="domcontentloaded")
+            await page.wait_for_timeout(600)
             path = str(out / f"slide_{i:03d}.png")
             await page.screenshot(
                 path=path,
