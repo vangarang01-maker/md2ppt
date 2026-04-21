@@ -29,38 +29,46 @@ Use ALL data in the source: every code, name, step, date, note, file path, and w
 |-------|-------|-------|
 | 값1   | 값2   | 값3   |
 | 값4   | 값5   | 값6   |
+| 값7   | 값8   | 값9   |
 
-**주의**: 중요한 보충 설명.
+> **⚠️ 주의**: 중요한 보충 설명.
 
-### Pattern B — Two Columns (use for: before/after, cause/effect, WHO does WHAT)
+### Pattern B — Two Column Cards (use for: before/after, checklist vs actions, two independent topics)
 ## 슬라이드 제목
 <div class="columns">
 <div>
 
 **왼쪽 헤더**
-- 항목 A
-- 항목 B
-- 항목 C
+- 항목 A — 세부 설명
+- 항목 B — 세부 설명
+- 항목 C — 세부 설명
+- 항목 D — 세부 설명
 
 </div>
 <div>
 
 **오른쪽 헤더**
-- 항목 X
-- 항목 Y
-- 항목 Z
+- 항목 X — 세부 설명
+- 항목 Y — 세부 설명
+- 항목 Z — 세부 설명
+- 항목 W — 세부 설명
 
 </div>
 </div>
 
-### Pattern C — Numbered Action List (use for: checklists, ordered procedures)
+> **핵심**: 아래에 두 컬럼을 종합하는 한 줄 요약.
+
+### Pattern C — Numbered Steps with Badge (use for: sequential procedures, action items)
 ## 슬라이드 제목
-**01** 첫 번째 액션 — 구체적인 설명 `코드_참조`
-**02** 두 번째 액션 — 구체적인 설명
-**03** 세 번째 액션 — 구체적인 설명
-**04** 네 번째 액션 — 구체적인 설명
+<span class="step">01</span> **첫 번째 액션** — 구체적인 설명, `코드_참조`, 담당자 명시
 
-> ⚠️ **주의**: 중요 경고 또는 검증 사항.
+<span class="step">02</span> **두 번째 액션** — 구체적인 설명, 예상 소요 시간 또는 결과물
+
+<span class="step">03</span> **세 번째 액션** — 구체적인 설명
+
+<span class="step">04</span> **네 번째 액션** — 구체적인 설명
+
+> **⚠️ 주의**: 중요 경고 또는 검증 사항.
 
 ### Pattern D — Code Diff (use for: source code changes, before/after logic)
 ## 슬라이드 제목
@@ -72,16 +80,23 @@ Use ALL data in the source: every code, name, step, date, note, file path, and w
   if (deptName === '구 이름') → '새 이름'           // 변경
 ```
 
-**작업 건수**: 신설 +1, 폐쇄 -2, 명칭 변경 7건
+| 작업 유형 | 건수 | 파일 위치 |
+|-----------|------|-----------|
+| 신설 | +1건 | gisCommon.js |
+| 폐쇄 | -2건 | gisCommon.js |
+| 명칭 변경 | 7건 | gisCommon.js |
 
-### Pattern E — Metadata Table (use for: system info, participants, schedule)
+### Pattern E — Metadata KV Table (use for: system info, participants, schedule, report)
 ## 슬라이드 제목
 | 항목 | 내용 |
 |------|------|
-| **System** | MPP |
-| **대상 파일** | src/.../gisCommon.js |
-| **배포 일시** | 2026.03.20 11:00 |
+| **System** | MPP (점포 임팩트 분석 시스템) |
+| **대상 파일** | `src/frontend/src/mixins/gisCommon.js` |
+| **배포 일시** | 2026.03.20 11:00 KST |
 | **담당자** | 최남우 / 이화성 |
+| **보고 대상** | PM 윤호석 |
+
+> **Tip**: 아래에 이 표를 보완하는 실행 메모 또는 다음 단계 안내.
 
 ## EXACT Required Output Format (DO NOT DEVIATE)
 
@@ -99,15 +114,22 @@ Then IMMEDIATELY the first slide (cover), like this:
 
 ```
 <!-- _class: lead -->
-# 제목
-## 부제목
+# 제목 (짧게, 1-2줄)
+## 부제목 (목적 또는 핵심 키워드)
+
+<div class="meta-bar">
+<span>📅 <strong>날짜</strong> 2026.03.19</span>
+<span>🏢 <strong>시스템</strong> MPP</span>
+<span>👤 <strong>담당</strong> 최남우</span>
+</div>
 
 ---
 
 ## 목차
-| # | 섹션 | 내용 |
-|---|------|------|
-| 01 | 섹션A | ... |
+| # | 섹션 | 내용 | 페이지 |
+|---|------|------|--------|
+| 01 | 섹션A | 한 줄 설명 | p.03 |
+| 02 | 섹션B | 한 줄 설명 | p.04 |
 ...
 
 ---
@@ -119,6 +141,7 @@ Then IMMEDIATELY the first slide (cover), like this:
 
 <!-- _class: section -->
 # Q&A
+관련 문서: `docs/경로/파일명.md`
 ```
 
 ## Structural Rules

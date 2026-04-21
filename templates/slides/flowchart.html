@@ -1,0 +1,71 @@
+{% extends "_base.html" %}
+{% block content %}
+{% set steps = slide.steps %}
+{% set count = steps | length %}
+
+<!-- 배경 장식 -->
+<div style="position:absolute;right:-80px;bottom:-80px;width:360px;height:360px;border-radius:50%;background:{{ theme.accent }}08;pointer-events:none;"></div>
+
+<!-- 제목 영역 -->
+<div style="position:absolute;top:0;left:0;right:0;padding:36px 72px 0;">
+  <h2 style="font-size:30px;font-weight:800;color:{{ theme.text }};letter-spacing:-0.5px;">{{ slide.title }}</h2>
+  <div style="margin-top:8px;width:44px;height:4px;background:{{ theme.accent }};border-radius:2px;"></div>
+</div>
+
+<!-- 순서도 컨테이너 -->
+<div style="position:absolute;top:110px;left:48px;right:48px;bottom:40px;display:flex;align-items:stretch;">
+
+  {% for step in steps %}
+
+  <!-- 단계 카드 -->
+  <div style="
+    flex:1;
+    min-width:0;
+    background:{{ theme.surface }};
+    border-radius:14px;
+    border:1px solid {{ theme.accent }}22;
+    padding:{% if count <= 3 %}28px 24px{% else %}20px 18px{% endif %};
+    display:flex;flex-direction:column;
+    position:relative;overflow:hidden;
+  ">
+    <!-- 상단 액센트 바 -->
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:{{ theme.accent }};"></div>
+
+    <!-- 단계 번호 고스트 워터마크 -->
+    <div style="position:absolute;bottom:-12px;right:6px;font-size:96px;font-weight:900;color:{{ theme.accent }}10;line-height:1;pointer-events:none;user-select:none;">{{ '%02d' % loop.index }}</div>
+
+    <!-- STEP 뱃지 -->
+    <div style="font-size:10px;font-weight:700;color:{{ theme.accent }};letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px;">STEP {{ '%02d' % loop.index }}</div>
+
+    <!-- 아이콘 -->
+    {% if step.icon and icons.get(step.icon) %}
+    <div style="color:{{ theme.accent }};width:{% if count <= 3 %}40px{% else %}32px{% endif %};height:{% if count <= 3 %}40px{% else %}32px{% endif %};margin-bottom:12px;opacity:0.9;">
+      {{ icons.get(step.icon) | safe }}
+    </div>
+    {% endif %}
+
+    <!-- 레이블 -->
+    <div style="font-size:{% if count <= 3 %}19px{% elif count == 4 %}16px{% else %}14px{% endif %};font-weight:700;color:{{ theme.text }};line-height:1.3;margin-bottom:10px;">{{ step.label }}</div>
+
+    <!-- 상세 설명 -->
+    {% if step.detail %}
+    <p style="font-size:{% if count <= 3 %}13px{% else %}12px{% endif %};color:{{ theme.body }};line-height:1.55;flex:1;">{{ step.detail }}</p>
+    {% endif %}
+  </div>
+
+  <!-- 화살표 (마지막 단계 제외) -->
+  {% if not loop.last %}
+  <div style="flex-shrink:0;width:40px;display:flex;align-items:center;justify-content:center;position:relative;">
+    <div style="width:100%;height:2px;background:{{ theme.accent }}45;"></div>
+    <div style="position:absolute;right:0;width:0;height:0;
+      border-top:7px solid transparent;
+      border-bottom:7px solid transparent;
+      border-left:12px solid {{ theme.accent }}70;">
+    </div>
+  </div>
+  {% endif %}
+
+  {% endfor %}
+
+</div>
+{% endblock %}
