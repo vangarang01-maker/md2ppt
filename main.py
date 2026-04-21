@@ -121,6 +121,86 @@ async def generate(
     return StreamingResponse(stream(), media_type="text/event-stream")
 
 
+@app.get("/api/generate-v2")
+async def generate_v2(
+    folder: str,
+    model: str,
+    theme: str = "",
+    goal: str = "",
+    audience: str = "",
+    output: str = OUTPUT_DIR,
+):
+    api_key = store.load(model)
+    if not api_key:
+        raise HTTPException(400, f"{model} API 키가 설정되지 않았습니다. 설정 탭에서 입력해주세요.")
+
+    openai_key = store.load("openai") or ""
+    pexels_key = store.load("pexels") or ""
+
+    _NODE_PROGRESS = {
+        "file_parser":      (10, ".md 파일 읽는 중..."),
+        "direction_agent":  (25, "[Node 2] 발표 방향 분석 중..."),
+        "design_selector":  (38, "[Node 3] Marp 디자인 테마 선택 중..."),
+        "outline_planner":  (58, "[Node 4] LLM → Marp 슬라이드 마크다운 생성 중..."),
+        "layout_validator": (75, "[Node 5] 슬라이드 구조 검증 중..."),
+        "final_output":     (88, "Marp CLI → PPTX 렌더링 중..."),
+    }
+
+    async def stream():
+        def event(progress: int, message: str, **kwargs):
+            data = {"progress": progress, "message": message, **kwargs}
+            return f"data: {json.dumps(data, ensure_ascii=False)}\n\n"
+
+        queue: asyncio.Queue = asyncio.Queue()
+        result: dict = {}
+
+        async def run_graph():
+            try:
+                from graph.graph import build_graph
+                initial_state = {
+                    "folder": folder, "model": model,
+                    "api_key": api_key, "openai_key": openai_key, "pexels_key": pexels_key,
+                    "goal": goal, "audience_hint": audience, "theme_hint": theme,
+                    "output_dir": output,
+                    "md_content": "", "direction": {}, "design_system": {},
+                    "marp_md": "", "slides_data": {}, "html_slides": [],
+                    "validation_issues": [], "iteration_count": 0, "output_path": "",
+                }
+                graph = build_graph()
+                async for chunk in graph.astream(initial_state):
+                    node_name = next(iter(chunk))
+                    node_state = chunk[node_name]
+                    await queue.put(("progress", node_name, node_state))
+                    result.update(node_state)
+                await queue.put(("done", None, None))
+            except Exception as e:
+                await queue.put(("error", str(e), None))
+
+        asyncio.create_task(run_graph())
+
+        while True:
+            kind, name, data = await queue.get()
+            if kind == "error":
+                yield f"data: {json.dumps({'error': _friendly_error(Exception(name))}, ensure_ascii=False)}\n\n"
+                break
+            if kind == "done":
+                yield event(100, "완료!", file=result.get("output_path", ""))
+                break
+            if name in _NODE_PROGRESS:
+                progress, message = _NODE_PROGRESS[name]
+                extra = {}
+                if name == "layout_validator":
+                    issues = data.get("validation_issues", [])
+                    count = data.get("iteration_count", 1)
+                    if issues:
+                        extra["warning"] = f"Marp 검증 이슈 {len(issues)}건 → 재생성 (시도 {count}/3)"
+                    else:
+                        extra["info"] = "슬라이드 구조 검증 통과"
+                yield event(progress, message, **extra)
+
+    return StreamingResponse(stream(), media_type="text/event-stream")
+
+
 def _friendly_error(e: Exception) -> str:
     msg = str(e)
     m = msg.lower()
@@ -135,6 +215,8 @@ def _friendly_error(e: Exception) -> str:
         return f"입력한 폴더 경로를 찾을 수 없습니다: {msg}"
     if "유효한 json" in m or "json" in m and "반환하지 않았습니다" in msg:
         return "AI가 슬라이드 구조 생성에 실패했습니다. 다시 시도하거나 다른 모델을 사용해보세요."
+    if "marp-cli" in m or "marp" in m and "오류" in msg:
+        return f"Marp CLI 렌더링 실패: {msg}\n터미널에서 'npx -y @marp-team/marp-cli@latest --version' 으로 설치를 확인하세요."
     if "executable doesn't exist" in m or "playwright" in m or "chromium" in m or "browser" in m:
         return "Playwright Chromium이 설치되지 않았습니다. 터미널에서 'playwright install chromium' 을 실행해주세요."
     if "connection" in m or "timeout" in m or "timed out" in m:

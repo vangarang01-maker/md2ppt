@@ -1,0 +1,157 @@
+/* @theme md2ppt-default */
+
+@import 'default';
+
+:root {
+  --color-bg: #1A1A2E;
+  --color-surface: #16213E;
+  --color-accent: #4D9DFF;
+  --color-accent-light: #AABBCC;
+  --color-text: #DDEEFF;
+  --color-subtext: #8892B0;
+}
+
+section {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', -apple-system, sans-serif;
+  font-size: 28px;
+  padding: 60px 72px;
+  line-height: 1.65;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+h1 {
+  color: #FFFFFF;
+  font-size: 72px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  line-height: 1.15;
+}
+
+h2 {
+  color: var(--color-accent);
+  font-size: 44px;
+  font-weight: 700;
+  border-bottom: 3px solid rgba(77, 157, 255, 0.35);
+  padding-bottom: 12px;
+  margin-top: 0;
+  margin-bottom: 36px;
+  display: block;
+}
+
+h3 {
+  color: var(--color-accent-light);
+  font-size: 32px;
+  margin-top: 24px;
+}
+
+p, li {
+  font-size: 28px;
+  margin-bottom: 12px;
+  color: var(--color-text);
+}
+
+strong {
+  color: var(--color-accent);
+}
+
+code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  background-color: var(--color-surface);
+  color: #58D9FF;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.88em;
+}
+
+pre {
+  background-color: var(--color-surface);
+  border-left: 5px solid var(--color-accent);
+  padding: 22px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+pre code {
+  background: transparent;
+  color: var(--color-text);
+  padding: 0;
+}
+
+blockquote {
+  background-color: var(--color-surface);
+  border-left: 5px solid var(--color-accent);
+  padding: 18px 28px;
+  border-radius: 0 8px 8px 0;
+  font-style: normal;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 24px;
+}
+
+th {
+  background-color: var(--color-surface);
+  color: var(--color-accent);
+  font-weight: 700;
+  padding: 14px 18px;
+  border-bottom: 3px solid var(--color-accent);
+  text-align: left;
+}
+
+td {
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(170, 187, 204, 0.2);
+}
+
+/* Title / cover slide */
+section.lead {
+  background: linear-gradient(135deg, #0D0D1F 0%, #1A1A2E 60%, #0D1535 100%);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+section.lead h1 {
+  font-size: 82px;
+  color: #FFFFFF;
+  text-shadow: 0 0 48px rgba(77, 157, 255, 0.5);
+  border: none;
+}
+
+section.lead h2 {
+  font-size: 30px;
+  color: var(--color-accent-light);
+  border: none;
+  margin-top: 16px;
+}
+
+section.lead p {
+  font-size: 26px;
+  color: var(--color-subtext);
+}
+
+/* Section divider */
+section.section {
+  background: linear-gradient(135deg, var(--color-surface), #0D1535);
+  justify-content: center;
+  align-items: flex-start;
+}
+
+section.section h1 {
+  font-size: 60px;
+  color: var(--color-accent);
+}
+
+/* Two-column layout helper */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  margin-top: 16px;
+}

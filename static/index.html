@@ -435,7 +435,7 @@
     const params = new URLSearchParams({ folder, model, goal, audience, theme, output: output || './output' });
 
     try {
-      const es = new EventSource(`/api/generate?${params}`);
+      const es = new EventSource(`/api/generate-v2?${params}`);
 
       es.onmessage = (e) => {
         const data = JSON.parse(e.data);

@@ -1,0 +1,155 @@
+/* @theme md2ppt-dark-tech */
+
+@import 'default';
+
+:root {
+  --color-bg: #0D1117;
+  --color-surface: #161B22;
+  --color-accent: #58A6FF;
+  --color-accent2: #3FB950;
+  --color-text: #C9D1D9;
+  --color-subtext: #8B949E;
+}
+
+section {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Pretendard', monospace;
+  font-size: 26px;
+  padding: 56px 68px;
+  line-height: 1.7;
+  /* default 테마가 justify-content를 덮어쓰는 것 방지 */
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+h1 {
+  color: #FFFFFF;
+  font-size: 68px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  font-family: 'Pretendard', sans-serif;
+}
+
+h2 {
+  color: var(--color-accent);
+  font-size: 40px;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(88, 166, 255, 0.3);
+  padding-bottom: 10px;
+  margin-top: 0;
+  margin-bottom: 32px;
+  font-family: 'Pretendard', sans-serif;
+  display: block;
+}
+
+h3 {
+  color: var(--color-accent2);
+  font-size: 30px;
+  font-family: 'Pretendard', sans-serif;
+}
+
+p, li {
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+strong {
+  color: var(--color-accent);
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: var(--color-surface);
+  color: var(--color-accent2);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 0.86em;
+  border: 1px solid rgba(88, 166, 255, 0.2);
+}
+
+pre {
+  background-color: var(--color-surface);
+  border: 1px solid rgba(88, 166, 255, 0.25);
+  border-left: 4px solid var(--color-accent);
+  padding: 20px;
+  border-radius: 6px;
+}
+
+pre code {
+  background: transparent;
+  color: var(--color-text);
+  border: none;
+  padding: 0;
+}
+
+blockquote {
+  background-color: var(--color-surface);
+  border-left: 4px solid var(--color-accent2);
+  padding: 16px 24px;
+  border-radius: 0 6px 6px 0;
+  font-style: normal;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 18px;
+  font-size: 22px;
+}
+
+th {
+  background-color: var(--color-surface);
+  color: var(--color-accent);
+  font-weight: 700;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--color-accent);
+  text-align: left;
+}
+
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(139, 148, 158, 0.2);
+}
+
+section.lead {
+  background: linear-gradient(135deg, #020409 0%, #0D1117 50%, #0A1628 100%);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+section.lead h1 {
+  font-size: 76px;
+  color: #FFFFFF;
+  text-shadow: 0 0 40px rgba(88, 166, 255, 0.6);
+}
+
+section.lead h2 {
+  font-size: 28px;
+  color: var(--color-subtext);
+  border: none;
+  margin-top: 14px;
+}
+
+section.lead p {
+  font-size: 24px;
+  color: var(--color-subtext);
+}
+
+section.section {
+  background: linear-gradient(135deg, var(--color-surface), #0A1628);
+  justify-content: center;
+}
+
+section.section h1 {
+  font-size: 56px;
+  color: var(--color-accent);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 44px;
+  margin-top: 14px;
+}

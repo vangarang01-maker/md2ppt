@@ -1,0 +1,169 @@
+/* @theme md2ppt-minimal */
+
+@import 'default';
+
+:root {
+  --color-bg: #FFFFFF;
+  --color-surface: #F8F9FA;
+  --color-accent: #2563EB;
+  --color-accent-light: #DBEAFE;
+  --color-text: #1F2937;
+  --color-subtext: #6B7280;
+  --color-border: #E5E7EB;
+}
+
+section {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, sans-serif;
+  font-size: 28px;
+  padding: 64px 84px;
+  line-height: 1.7;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+h1 {
+  color: var(--color-text);
+  font-size: 68px;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+
+h2 {
+  color: var(--color-accent);
+  font-size: 42px;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 32px;
+  position: relative;
+  display: block;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 48px;
+  height: 4px;
+  background: var(--color-accent);
+  border-radius: 2px;
+}
+
+h3 {
+  color: var(--color-subtext);
+  font-size: 30px;
+  margin-top: 20px;
+}
+
+p, li {
+  font-size: 27px;
+  margin-bottom: 12px;
+  color: var(--color-text);
+}
+
+strong {
+  color: var(--color-accent);
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: var(--color-surface);
+  color: var(--color-accent);
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-size: 0.87em;
+  border: 1px solid var(--color-border);
+}
+
+pre {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-accent);
+  padding: 22px;
+  border-radius: 8px;
+}
+
+pre code {
+  background: transparent;
+  color: var(--color-text);
+  border: none;
+  padding: 0;
+}
+
+blockquote {
+  background-color: var(--color-accent-light);
+  border-left: 5px solid var(--color-accent);
+  padding: 16px 24px;
+  border-radius: 0 8px 8px 0;
+  font-style: normal;
+  color: var(--color-text);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 23px;
+}
+
+th {
+  background-color: var(--color-surface);
+  color: var(--color-accent);
+  font-weight: 700;
+  padding: 13px 18px;
+  border-bottom: 2px solid var(--color-accent);
+  text-align: left;
+}
+
+td {
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+section.lead {
+  background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+  color: #FFFFFF;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+section.lead h1 {
+  color: #FFFFFF;
+  font-size: 78px;
+}
+
+section.lead h2 {
+  color: rgba(255,255,255,0.75);
+  font-size: 28px;
+  margin-top: 14px;
+}
+
+section.lead h2::after {
+  display: none;
+}
+
+section.lead p {
+  color: rgba(255,255,255,0.7);
+  font-size: 24px;
+}
+
+section.section {
+  background-color: var(--color-surface);
+  border-left: 8px solid var(--color-accent);
+  justify-content: center;
+}
+
+section.section h1 {
+  color: var(--color-accent);
+  font-size: 56px;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 52px;
+  margin-top: 18px;
+}
